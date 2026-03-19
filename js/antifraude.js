@@ -1,6 +1,8 @@
 // ============================================================
 // SISTEMA ANTIFRAUDE – PROCESOS INDUSTRIALES 1
 // Compatible con escritorio y dispositivos móviles
+// Bloqueo PERSISTENTE: usa localStorage para que cerrar el
+// navegador NO permita reingresar al examen.
 // ============================================================
 
 const Antifraude = (() => {
@@ -20,11 +22,14 @@ const Antifraude = (() => {
                     || ('ontouchstart' in window && window.innerWidth < 1024);
 
   // ── Constantes de almacenamiento ─────────────────────────
-  const KEY_PRESENTADO  = 'pi1_presentado';   // localStorage – permanente
-  const KEY_RECARGADO   = 'pi1_recargado';    // sessionStorage – temporal
-  const KEY_ANULADO     = 'pi1_anulado';      // sessionStorage – temporal
-  const KEY_STRIKES     = 'pi1_strikes_tab';  // sessionStorage
-  const KEY_COMPLETADO  = 'pi1_completado';   // sessionStorage – bloqueo post-envío
+  // TODO: Todos los bloqueos críticos ahora usan localStorage
+  // para que sobrevivan al cierre de pestaña/navegador
+  const KEY_PRESENTADO    = 'pi1_presentado';     // localStorage – lista de códigos que ya presentaron
+  const KEY_DISPOSITIVO   = 'pi1_dispositivo_uso'; // localStorage – marca que ESTE dispositivo ya fue usado
+  const KEY_EXAMEN_ACTIVO = 'pi1_examen_activo';   // localStorage – hay un examen en progreso
+  const KEY_ANULADO       = 'pi1_anulado';         // localStorage – el examen fue anulado
+  const KEY_COMPLETADO    = 'pi1_completado';      // localStorage – el examen fue completado
+  const KEY_STRIKES       = 'pi1_strikes_tab';     // localStorage – strikes de cambio de pestaña
 
   let _callbackBloqueado = null;
 
@@ -34,38 +39,52 @@ const Antifraude = (() => {
     _callbackWarn      = onWarn;
     _callbackBloqueado = onBloqueado;
 
-    _strikesTab = parseInt(sessionStorage.getItem(KEY_STRIKES) || '0', 10);
+    _strikesTab = parseInt(localStorage.getItem(KEY_STRIKES) || '0', 10);
 
-    // 1. Verificar si el examen ya fue completado en esta sesión (reload post-envío)
-    const completado = sessionStorage.getItem(KEY_COMPLETADO);
+    // 1. Verificar si el examen ya fue completado en ESTE dispositivo
+    const completado = localStorage.getItem(KEY_COMPLETADO);
     if (completado) {
+      const datosComp = JSON.parse(completado);
       setTimeout(() => {
         _callbackBloqueado && _callbackBloqueado(
-          'Ya enviaste tu examen en esta sesión. No es posible volver a presentarlo.'
+          `Ya presentaste este examen. Código: ${datosComp.codigo || 'N/A'}. No es posible volver a intentarlo.`
         );
       }, 0);
       return false;
     }
 
-    // 2. Verificar si ya fue anulado en esta sesión (tras reload durante examen)
-    const anulado = sessionStorage.getItem(KEY_ANULADO);
+    // 2. Verificar si el examen fue anulado en ESTE dispositivo
+    const anulado = localStorage.getItem(KEY_ANULADO);
     if (anulado) {
       const datos = JSON.parse(anulado);
       _anularDirecto(datos.motivo, datos.estudiantil || '');
       return false;
     }
 
-    // 3. Detectar recarga mientras el examen estaba activo → ANULAR
-    const yaInicio = sessionStorage.getItem(KEY_RECARGADO);
-    if (yaInicio) {
-      _registrarAnulado('Recargaste la página durante el examen.');
+    // 3. Verificar si ESTE dispositivo ya fue usado para un examen (aunque no haya terminado)
+    //    Esto cubre el caso de cerrar navegador durante el examen
+    const dispositivoUsado = localStorage.getItem(KEY_DISPOSITIVO);
+    if (dispositivoUsado) {
+      const datosDisp = JSON.parse(dispositivoUsado);
+      // Si hay un examen activo marcado, el estudiante cerró/recargó durante el examen → ANULAR
+      const examenActivo = localStorage.getItem(KEY_EXAMEN_ACTIVO);
+      if (examenActivo) {
+        _registrarAnulado('Cerraste o recargaste la página durante el examen.');
+        return false;
+      }
+      // Si no hay examen activo pero el dispositivo ya fue usado, bloquear
+      setTimeout(() => {
+        _callbackBloqueado && _callbackBloqueado(
+          `Este dispositivo ya fue usado para presentar el examen. Código: ${datosDisp.codigo || 'N/A'}. No es posible volver a intentarlo.`
+        );
+      }, 0);
       return false;
     }
 
-    return true; // sesión limpia
+    return true; // sesión limpia, dispositivo nuevo
   }
 
-  // ── Verificar si el estudiante ya presentó ───────────────
+  // ── Verificar si el estudiante ya presentó (por código) ──
   function yaPresento(codigo) {
     const lista = JSON.parse(localStorage.getItem(KEY_PRESENTADO) || '[]');
     return lista.some(e => e.codigo === codigo);
@@ -81,8 +100,19 @@ const Antifraude = (() => {
   // ── Activar vigilancia (llamar al iniciar el examen) ─────
   function activar(codigo) {
     _examenActivo = true;
-    // Marcar que hay examen activo para detectar recarga
-    sessionStorage.setItem(KEY_RECARGADO, JSON.stringify({ codigo, t: Date.now() }));
+
+    // Marcar dispositivo como usado (PERSISTENTE - sobrevive cierre de navegador)
+    localStorage.setItem(KEY_DISPOSITIVO, JSON.stringify({
+      codigo,
+      nombre: sessionStorage.getItem('pi1_nombre') || '',
+      timestamp: Date.now()
+    }));
+
+    // Marcar que hay un examen activo en curso
+    localStorage.setItem(KEY_EXAMEN_ACTIVO, JSON.stringify({
+      codigo,
+      t: Date.now()
+    }));
 
     _vigilarVisibilidad();
     _vigilarTeclado();
@@ -95,16 +125,22 @@ const Antifraude = (() => {
     }
   }
 
-  // ── Marcar examen como completado (bloquea reload post-envío) ──
+  // ── Marcar examen como completado ─────────────────────────
   function marcarCompletado() {
-    sessionStorage.setItem(KEY_COMPLETADO, Date.now().toString());
+    localStorage.setItem(KEY_COMPLETADO, JSON.stringify({
+      codigo: sessionStorage.getItem('pi1_codigo') || '',
+      nombre: sessionStorage.getItem('pi1_nombre') || '',
+      timestamp: Date.now()
+    }));
+    // Limpiar flag de examen activo (ya terminó correctamente)
+    localStorage.removeItem(KEY_EXAMEN_ACTIVO);
   }
 
   // ── Desactivar al finalizar correctamente ────────────────
   function desactivar() {
     _examenActivo = false;
-    sessionStorage.removeItem(KEY_RECARGADO);
-    // KEY_COMPLETADO y KEY_ANULADO se mantienen para bloquear recargas
+    localStorage.removeItem(KEY_EXAMEN_ACTIVO);
+    // KEY_COMPLETADO y KEY_DISPOSITIVO se mantienen para bloquear futuros intentos
   }
 
   // ══════════════════════════════════════════════════════════
@@ -114,12 +150,11 @@ const Antifraude = (() => {
   // 1. Cambio de pestaña / minimizar / cambiar app
   function _vigilarVisibilidad() {
     // visibilitychange es confiable tanto en móvil como en escritorio
-    // Solo se dispara cuando realmente se cambia de pestaña o app
     document.addEventListener('visibilitychange', () => {
       if (!_examenActivo || _anulado) return;
       if (document.hidden) {
         _strikesTab++;
-        sessionStorage.setItem(KEY_STRIKES, String(_strikesTab));
+        localStorage.setItem(KEY_STRIKES, String(_strikesTab));
 
         if (_strikesTab >= MAX_STRIKES) {
           _registrarAnulado('Abandonaste la ventana del examen 2 veces. Examen anulado automáticamente.');
@@ -133,16 +168,13 @@ const Antifraude = (() => {
       }
     });
 
-    // blur = cambiar de aplicación o abrir otra pestaña
-    // EN MÓVIL: NO usar blur porque se dispara con teclado, notificaciones,
-    // barra de direcciones, etc. → genera falsos positivos
+    // blur = cambiar de aplicación (SOLO escritorio)
     if (!_esMobile) {
       window.addEventListener('blur', () => {
         if (!_examenActivo || _anulado) return;
-        // Solo contar si la página NO está oculta (para no duplicar con visibilitychange)
         if (!document.hidden) {
           _strikesTab++;
-          sessionStorage.setItem(KEY_STRIKES, String(_strikesTab));
+          localStorage.setItem(KEY_STRIKES, String(_strikesTab));
 
           if (_strikesTab >= MAX_STRIKES) {
             _registrarAnulado('Cambiaste de aplicación o abriste otra ventana 2 veces. Examen anulado.');
@@ -171,7 +203,6 @@ const Antifraude = (() => {
         const altoActual   = window.innerHeight;
         const altoPantalla = window.screen.height;
 
-        // Detectar pantalla dividida horizontalmente o verticalmente
         const esSplit = (anchoActual < anchoPantalla * MIN_WIDTH_PCT) ||
                         (altoActual  < altoPantalla * 0.65);
 
@@ -187,7 +218,7 @@ const Antifraude = (() => {
             );
           }
         }
-      }, 800); // Tiempo más largo para evitar falsos positivos
+      }, 800);
     });
   }
 
@@ -201,21 +232,17 @@ const Antifraude = (() => {
       const key   = e.key;
 
       const bloqueados = [
-        // Screenshot / Impresión
-        ctrl && key === 'p',                    // Ctrl+P (imprimir)
-        ctrl && shift && key === 'S',           // Ctrl+Shift+S (guardar como)
-        key === 'PrintScreen',                  // PrtScn
-        // DevTools
+        ctrl && key === 'p',
+        ctrl && shift && key === 'S',
+        key === 'PrintScreen',
         key === 'F12',
-        ctrl && shift && key === 'I',           // Ctrl+Shift+I
-        ctrl && shift && key === 'J',           // Ctrl+Shift+J
-        ctrl && shift && key === 'C',           // Ctrl+Shift+C
-        // Otras navegaciones peligrosas
-        ctrl && key === 'u',                    // Ver código fuente
-        ctrl && key === 's',                    // Guardar página
-        ctrl && key === 'a',                    // Seleccionar todo (en examen)
-        ctrl && key === 'c',                    // Copiar
-        // Alt+Tab (cambiar ventana en Windows)
+        ctrl && shift && key === 'I',
+        ctrl && shift && key === 'J',
+        ctrl && shift && key === 'C',
+        ctrl && key === 'u',
+        ctrl && key === 's',
+        ctrl && key === 'a',
+        ctrl && key === 'c',
         e.altKey && key === 'Tab',
       ];
 
@@ -224,7 +251,7 @@ const Antifraude = (() => {
         e.stopPropagation();
         return false;
       }
-    }, true); // capture phase para mayor prioridad
+    }, true);
   }
 
   // 4. Detectar apertura de DevTools (SOLO ESCRITORIO)
@@ -234,7 +261,6 @@ const Antifraude = (() => {
     const check = () => {
       if (!_examenActivo || _anulado) return;
       const diff = window.outerHeight - window.innerHeight;
-      // DevTools abierto verticalmente agrega ~150px o más
       if (diff > 160 && !devToolsOpen) {
         devToolsOpen = true;
         _registrarAnulado('Se detectó la apertura de herramientas de desarrollo del navegador.');
@@ -269,26 +295,39 @@ const Antifraude = (() => {
       timestamp: new Date().toISOString()
     };
 
-    // Guardar en sessionStorage para persistir si recarga
-    sessionStorage.setItem(KEY_ANULADO, JSON.stringify(datos));
-    // Limpiar flag de recarga para no re-detectar
-    sessionStorage.removeItem(KEY_RECARGADO);
+    // Guardar en localStorage (PERSISTENTE - sobrevive cierre de navegador)
+    localStorage.setItem(KEY_ANULADO, JSON.stringify(datos));
+    // Limpiar flag de examen activo
+    localStorage.removeItem(KEY_EXAMEN_ACTIVO);
 
     // Notificar al controlador del examen
     _callbackAnular && _callbackAnular(motivo, datos);
   }
 
   function _anularDirecto(motivo, codigo) {
-    // Llamado cuando se detecta anulación en sessionStorage al cargar
     _anulado = true;
     _callbackAnular && _callbackAnular(motivo, {
       motivo,
       estudiantil: codigo,
       nombre: sessionStorage.getItem('pi1_nombre') || '',
-      timestamp: sessionStorage.getItem(KEY_ANULADO)
-        ? JSON.parse(sessionStorage.getItem(KEY_ANULADO)).timestamp
+      timestamp: localStorage.getItem(KEY_ANULADO)
+        ? JSON.parse(localStorage.getItem(KEY_ANULADO)).timestamp
         : new Date().toISOString()
     });
+  }
+
+  // ── Función para limpiar bloqueos (solo para el docente) ──
+  // Ejecutar en la consola del navegador: Antifraude.resetear()
+  function resetear() {
+    localStorage.removeItem(KEY_PRESENTADO);
+    localStorage.removeItem(KEY_DISPOSITIVO);
+    localStorage.removeItem(KEY_EXAMEN_ACTIVO);
+    localStorage.removeItem(KEY_ANULADO);
+    localStorage.removeItem(KEY_COMPLETADO);
+    localStorage.removeItem(KEY_STRIKES);
+    sessionStorage.clear();
+    console.log('✅ Todos los bloqueos han sido eliminados. Recarga la página.');
+    location.reload();
   }
 
   // ── API pública ───────────────────────────────────────────
@@ -302,6 +341,7 @@ const Antifraude = (() => {
     getStrikes:  () => _strikesTab,
     estaAnulado: () => _anulado,
     esMobile:    () => _esMobile,
+    resetear,  // Solo para uso del docente
   };
 
 })();
