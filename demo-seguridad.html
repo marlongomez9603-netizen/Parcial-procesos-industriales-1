@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DEMO – Sistema de Seguridad | Procesos Industriales 1</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 50%, #24243e 100%);
+      color: #e0e0e0;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .demo-header {
+      background: linear-gradient(135deg, #1a3a5c, #2e86c1);
+      padding: 24px 20px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+    .demo-header h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .demo-header p {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.75);
+    }
+    .demo-badge {
+      display: inline-block;
+      background: #e74c3c;
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); box-shadow: 0 0 15px rgba(231,76,60,0.5); }
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+    }
+
+    .intro-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 24px 20px;
+      margin-bottom: 24px;
+      backdrop-filter: blur(10px);
+    }
+    .intro-card h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #f1c40f;
+      margin-bottom: 10px;
+    }
+    .intro-card p {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.8);
+    }
+
+    /* ── Monitor en vivo ─────────────────── */
+    .monitor {
+      background: rgba(0,0,0,0.5);
+      border: 2px solid #27ae60;
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 24px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.82rem;
+    }
+    .monitor-title {
+      color: #27ae60;
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+    .monitor-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .monitor-row:last-child { border-bottom: none; }
+    .monitor-label { color: #bbb; }
+    .monitor-value { color: #2ecc71; font-weight: 600; }
+    .monitor-value.warning { color: #f1c40f; }
+    .monitor-value.danger { color: #e74c3c; }
+
+    /* ── Tarjetas de prueba ──────────────── */
+    .test-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      margin-bottom: 16px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    .test-card:hover { 
+      border-color: rgba(255,255,255,0.15);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    }
+    .test-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 18px;
+      cursor: pointer;
+    }
+    .test-icon {
+      font-size: 1.8rem;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.06);
+      border-radius: 12px;
+      flex-shrink: 0;
+    }
+    .test-info { flex: 1; }
+    .test-info h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 3px;
+    }
+    .test-info p {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.5);
+    }
+    .test-status {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+    }
+    .status-ready { background: rgba(46,204,113,0.15); color: #2ecc71; }
+    .status-active { background: rgba(241,196,15,0.15); color: #f1c40f; animation: pulse 1.5s infinite; }
+    .status-triggered { background: rgba(231,76,60,0.15); color: #e74c3c; }
+
+    .test-body {
+      padding: 0 18px 16px;
+      display: none;
+    }
+    .test-body.open { display: block; }
+    .test-body p {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+    .test-result {
+      background: rgba(0,0,0,0.3);
+      border-radius: 8px;
+      padding: 12px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.8rem;
+      color: #2ecc71;
+      margin-top: 8px;
+      min-height: 40px;
+    }
+
+    .btn-test {
+      background: linear-gradient(135deg, #2e86c1, #1a6da8);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 6px;
+    }
+    .btn-test:hover { transform: scale(1.02); box-shadow: 0 4px 15px rgba(46,134,193,0.4); }
+    .btn-test:active { transform: scale(0.98); }
+    .btn-test.danger { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+    .btn-test.success { background: linear-gradient(135deg, #27ae60, #1e8449); }
+
+    .btn-reset {
+      display: block;
+      width: 100%;
+      margin-top: 30px;
+      padding: 14px;
+      background: rgba(255,255,255,0.06);
+      border: 2px solid rgba(255,255,255,0.15);
+      color: #fff;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-reset:hover { background: rgba(255,255,255,0.1); border-color: #2ecc71; }
+
+    /* ── Log de eventos ───────────────────── */
+    .event-log {
+      background: rgba(0,0,0,0.6);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 20px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .event-log h3 {
+      font-size: 0.85rem;
+      color: #2ecc71;
+      margin-bottom: 10px;
+      font-family: 'Courier New', monospace;
+    }
+    .log-entry {
+      font-family: 'Courier New', monospace;
+      font-size: 0.75rem;
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+    .log-entry .time { color: #7f8c8d; }
+    .log-entry .msg { margin-left: 8px; }
+    .log-entry.info .msg { color: #3498db; }
+    .log-entry.warn .msg { color: #f1c40f; }
+    .log-entry.error .msg { color: #e74c3c; }
+    .log-entry.success .msg { color: #2ecc71; }
+
+    /* ── Overlay de advertencia ────────────── */
+    .overlay-demo {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      animation: fadeIn 0.3s;
+    }
+    .overlay-demo.visible { display: flex; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .overlay-box {
+      background: linear-gradient(145deg, #1a1a3e, #2c2c5e);
+      border: 2px solid;
+      border-radius: 20px;
+      padding: 35px 30px;
+      text-align: center;
+      max-width: 420px;
+      width: 90%;
+      animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+    .overlay-box.warning-style { border-color: #f1c40f; }
+    .overlay-box.danger-style { border-color: #e74c3c; }
+    .overlay-icon { font-size: 3.5rem; margin-bottom: 10px; }
+    .overlay-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 8px; }
+    .overlay-msg { font-size: 0.9rem; color: rgba(255,255,255,0.75); line-height: 1.5; margin-bottom: 16px; }
+    .overlay-btn {
+      padding: 10px 28px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: white;
+    }
+    .overlay-btn.warn-btn { background: #f1c40f; color: #1a1a3e; }
+    .overlay-btn.danger-btn { background: #e74c3c; }
+
+    /* ── Countdown visual ───────────────── */
+    .countdown-bar {
+      width: 100%;
+      height: 6px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 3px;
+      margin-top: 12px;
+      overflow: hidden;
+    }
+    .countdown-fill {
+      height: 100%;
+      background: #f1c40f;
+      border-radius: 3px;
+      transition: width 1s linear;
+    }
+    .countdown-text {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.5);
+      margin-top: 6px;
+    }
+
+    /* ── Footer ────────────────────────── */
+    .demo-footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.3);
+    }
+  </style>
+</head>
+<body>
+
+<div class="demo-header">
+  <div class="demo-badge">🔒 MODO DEMOSTRACIÓN</div>
+  <h1>Sistema de Seguridad del Examen</h1>
+  <p>Procesos Industriales 1 – UNIPAZ – Semestre 2025-2</p>
+</div>
+
+<div class="container">
+
+  <div class="intro-card">
+    <h2>⚠️ ¿Qué es esta demostración?</h2>
+    <p>
+      Este es un <strong>simulador interactivo</strong> del sistema de seguridad que estará activo durante el examen real. 
+      Aquí puedes probar cada una de las protecciones para que entiendas exactamente qué acciones están prohibidas 
+      y qué consecuencias tienen. <strong>Esto NO es el examen real</strong> – es solo una demostración educativa.
+    </p>
+  </div>
+
+  <!-- Monitor en vivo -->
+  <div class="monitor" id="monitor">
+    <div class="monitor-title">📊 MONITOR EN TIEMPO REAL</div>
+    <div class="monitor-row">
+      <span class="monitor-label">Estado del sistema:</span>
+      <span class="monitor-value" id="mon-estado">INACTIVO</span>
+    </div>
+    <div class="monitor-row">
+      <span class="monitor-label">Cambios de pestaña:</span>
+      <span class="monitor-value" id="mon-strikes">0 / 2</span>
+    </div>
+    <div class="monitor-row">
+      <span class="monitor-label">Advertencias resize:</span>
+      <span class="monitor-value" id="mon-resize">0</span>
+    </div>
+    <div class="monitor-row">
+      <span class="monitor-label">Teclas bloqueadas:</span>
+      <span class="monitor-value" id="mon-teclas">0</span>
+    </div>
+    <div class="monitor-row">
+      <span class="monitor-label">Clic derecho bloqueado:</span>
+      <span class="monitor-value" id="mon-contextmenu">0</span>
+    </div>
+  </div>
+
+  <!-- Test 1: Activar sistema -->
+  <div class="test-card" id="card-activar">
+    <div class="test-header" onclick="toggleCard('activar')">
+      <div class="test-icon">🛡️</div>
+      <div class="test-info">
+        <h3>1. Activar Sistema de Seguridad</h3>
+        <p>Inicia la vigilancia (obligatorio para probar lo demás)</p>
+      </div>
+      <span class="test-status status-ready" id="status-activar">INACTIVO</span>
+    </div>
+    <div class="test-body" id="body-activar">
+      <p>Al iniciar el examen real, el sistema se activa automáticamente. Aquí debes activarlo manualmente para probar las demás funciones.</p>
+      <button class="btn-test success" onclick="activarSistema()">🛡️ Activar Sistema</button>
+      <div class="test-result" id="result-activar">Esperando activación...</div>
+    </div>
+  </div>
+
+  <!-- Test 2: Cambio de pestaña -->
+  <div class="test-card" id="card-pestana">
+    <div class="test-header" onclick="toggleCard('pestana')">
+      <div class="test-icon">📱</div>
+      <div class="test-info">
+        <h3>2. Cambio de Pestaña / App</h3>
+        <p>Sal de esta pestaña por más de 10 seg para ver qué pasa</p>
+      </div>
+      <span class="test-status status-ready" id="status-pestana">LISTO</span>
+    </div>
+    <div class="test-body" id="body-pestana">
+      <p>
+        <strong>Prueba:</strong> Cambia a otra pestaña o abre otra app y quédate fuera por <strong>más de 10 segundos</strong>. 
+        Si regresas antes de 10 segundos, no pasa nada.
+      </p>
+      <p>
+        • <strong>1ª vez (&gt;10s):</strong> Advertencia visible ⚠️<br>
+        • <strong>2ª vez (&gt;10s):</strong> Examen anulado 🚫
+      </p>
+      <div id="countdown-container" style="display:none;">
+        <div class="countdown-bar">
+          <div class="countdown-fill" id="countdown-fill" style="width: 100%"></div>
+        </div>
+        <div class="countdown-text" id="countdown-text">Volviste a tiempo ✓</div>
+      </div>
+      <div class="test-result" id="result-pestana">Activa el sistema y sal de la pestaña para probar...</div>
+    </div>
+  </div>
+
+  <!-- Test 3: Clic derecho -->
+  <div class="test-card" id="card-clic">
+    <div class="test-header" onclick="toggleCard('clic')">
+      <div class="test-icon">🖱️</div>
+      <div class="test-info">
+        <h3>3. Clic Derecho / Long Press</h3>
+        <p>Intenta hacer clic derecho o mantener presionado</p>
+      </div>
+      <span class="test-status status-ready" id="status-clic">LISTO</span>
+    </div>
+    <div class="test-body" id="body-clic">
+      <p><strong>Prueba:</strong> Haz clic derecho (PC) o mantén presionado (celular) en cualquier parte de esta página.</p>
+      <p>Resultado: El menú contextual será <strong>bloqueado</strong> completamente.</p>
+      <div class="test-result" id="result-clic">Intenta hacer clic derecho para probar...</div>
+    </div>
+  </div>
+
+  <!-- Test 4: Atajos de teclado -->
+  <div class="test-card" id="card-teclado">
+    <div class="test-header" onclick="toggleCard('teclado')">
+      <div class="test-icon">⌨️</div>
+      <div class="test-info">
+        <h3>4. Atajos de Teclado Bloqueados</h3>
+        <p>Ctrl+C, Ctrl+P, F12, PrintScreen, etc.</p>
+      </div>
+      <span class="test-status status-ready" id="status-teclado">LISTO</span>
+    </div>
+    <div class="test-body" id="body-teclado">
+      <p><strong>Prueba:</strong> Intenta presionar cualquiera de estos atajos:</p>
+      <p>
+        • <strong>Ctrl+C</strong> – Copiar<br>
+        • <strong>Ctrl+P</strong> – Imprimir<br>
+        • <strong>Ctrl+S</strong> – Guardar<br>
+        • <strong>Ctrl+U</strong> – Ver código fuente<br>
+        • <strong>F12</strong> – Herramientas de desarrollo<br>
+        • <strong>Ctrl+Shift+I</strong> – Inspector<br>
+        • <strong>PrintScreen</strong> – Captura de pantalla
+      </p>
+      <div class="test-result" id="result-teclado">Presiona algún atajo bloqueado para probar...</div>
+    </div>
+  </div>
+
+  <!-- Test 5: Recarga de página -->
+  <div class="test-card" id="card-recarga">
+    <div class="test-header" onclick="toggleCard('recarga')">
+      <div class="test-icon">🔄</div>
+      <div class="test-info">
+        <h3>5. Recarga de Página</h3>
+        <p>En el examen real, recargar = anulación inmediata</p>
+      </div>
+      <span class="test-status status-ready" id="status-recarga">LISTO</span>
+    </div>
+    <div class="test-body" id="body-recarga">
+      <p>
+        <strong>⚠️ En el examen real:</strong> Si recargas la página (F5, deslizar hacia abajo en celular, o cerrar y abrir el navegador), 
+        el examen se <strong>anula automáticamente</strong> y el dispositivo queda <strong>bloqueado permanentemente</strong>.
+      </p>
+      <p>
+        <strong>En esta demo:</strong> Puedes recargar sin problema, solo se reiniciará la demostración.
+      </p>
+      <div class="test-result" id="result-recarga">
+        ℹ️ En el examen real: recarga = anulación + bloqueo del dispositivo.
+        El estudiante NO puede volver a intentarlo.
+      </div>
+    </div>
+  </div>
+
+  <!-- Test 6: Bloqueo de dispositivo -->
+  <div class="test-card" id="card-dispositivo">
+    <div class="test-header" onclick="toggleCard('dispositivo')">
+      <div class="test-icon">📵</div>
+      <div class="test-info">
+        <h3>6. Bloqueo por Dispositivo</h3>
+        <p>Un celular = un intento. Sin excepciones.</p>
+      </div>
+      <span class="test-status status-ready" id="status-dispositivo">LISTO</span>
+    </div>
+    <div class="test-body" id="body-dispositivo">
+      <p>
+        En el examen real, el sistema marca tu celular/computador la primera vez que inicias. 
+        <strong>Aunque cierres el navegador, borres las pestañas, o cambies de código estudiantil</strong>, 
+        el dispositivo queda bloqueado.
+      </p>
+      <p>
+        • <strong>Cerrar navegador y reabrir:</strong> 🔒 BLOQUEADO<br>
+        • <strong>Usar otra cuenta/código:</strong> 🔒 BLOQUEADO<br>
+        • <strong>Borrar historial:</strong> 🔒 BLOQUEADO (a menos que borren datos de sitio, que el docente detectará)
+      </p>
+      <div class="test-result" id="result-dispositivo">
+        🔒 Cada dispositivo tiene UNA oportunidad. No hay reintentos.
+      </div>
+    </div>
+  </div>
+
+  <!-- Log de eventos -->
+  <div class="event-log" id="event-log">
+    <h3>📋 LOG DE EVENTOS</h3>
+    <div id="log-entries">
+      <div class="log-entry info">
+        <span class="time">[--:--:--]</span>
+        <span class="msg">Demo cargada. Activa el sistema para comenzar las pruebas.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resumen de reglas -->
+  <div class="intro-card" style="margin-top: 24px;">
+    <h2>📋 Resumen de Reglas del Examen</h2>
+    <p style="margin-bottom: 10px;">Recuerda estas reglas durante el examen real:</p>
+    <p>
+      ✅ Leer bien cada pregunta antes de responder<br>
+      ✅ Mantener la pantalla del examen visible en todo momento<br>
+      ✅ Usar solo el navegador con la pestaña del examen<br><br>
+      ❌ NO cambiar de pestaña o app por más de 10 segundos (2 veces = anulación)<br>
+      ❌ NO recargar la página<br>
+      ❌ NO dividir la pantalla (PC)<br>
+      ❌ NO copiar texto (Ctrl+C)<br>
+      ❌ NO hacer capturas de pantalla<br>
+      ❌ NO abrir herramientas de desarrollo<br>
+      ❌ NO cerrar el navegador durante el examen
+    </p>
+  </div>
+
+  <button class="btn-reset" onclick="resetDemo()">🔄 Reiniciar Demostración</button>
+
+</div>
+
+<div class="demo-footer">
+  DEMO DE SEGURIDAD – No calificable | UNIPAZ – Procesos Industriales 1
+</div>
+
+<!-- Overlay -->
+<div class="overlay-demo" id="overlay-demo">
+  <div class="overlay-box" id="overlay-box">
+    <div class="overlay-icon" id="overlay-icon">⚠️</div>
+    <div class="overlay-title" id="overlay-title">Advertencia</div>
+    <div class="overlay-msg" id="overlay-msg">Mensaje</div>
+    <button class="overlay-btn warn-btn" id="overlay-btn" onclick="cerrarOverlay()">Entendido</button>
+  </div>
+</div>
+
+<script>
+  // ── Estado del demo ────────────────────
+  let sistemaActivo = false;
+  let strikes = 0;
+  let resizeStrikes = 0;
+  let teclasBlock = 0;
+  let contextBlock = 0;
+  let timerGracia = null;
+  let countdownInterval = null;
+  const GRACIA = 10; // segundos
+  let countdownLeft = GRACIA;
+
+  // ── Toggle cards ───────────────────────
+  function toggleCard(id) {
+    const body = document.getElementById('body-' + id);
+    body.classList.toggle('open');
+  }
+
+  // ── Log ─────────────────────────────────
+  function addLog(msg, type = 'info') {
+    const now = new Date();
+    const time = now.toLocaleTimeString('es-CO');
+    const entry = document.createElement('div');
+    entry.className = `log-entry ${type}`;
+    entry.innerHTML = `<span class="time">[${time}]</span><span class="msg">${msg}</span>`;
+    const container = document.getElementById('log-entries');
+    container.insertBefore(entry, container.firstChild);
+    // Limit log entries
+    while (container.children.length > 50) {
+      container.removeChild(container.lastChild);
+    }
+  }
+
+  // ── Actualizar monitor ─────────────────
+  function updateMonitor() {
+    document.getElementById('mon-estado').textContent = sistemaActivo ? 'ACTIVO 🟢' : 'INACTIVO';
+    document.getElementById('mon-estado').className = `monitor-value ${sistemaActivo ? '' : 'warning'}`;
+
+    const strikesEl = document.getElementById('mon-strikes');
+    strikesEl.textContent = `${strikes} / 2`;
+    strikesEl.className = `monitor-value ${strikes >= 2 ? 'danger' : strikes > 0 ? 'warning' : ''}`;
+
+    document.getElementById('mon-resize').textContent = resizeStrikes;
+    document.getElementById('mon-teclas').textContent = teclasBlock;
+    document.getElementById('mon-contextmenu').textContent = contextBlock;
+  }
+
+  // ── Activar sistema ─────────────────────
+  function activarSistema() {
+    sistemaActivo = true;
+    document.getElementById('status-activar').textContent = 'ACTIVO';
+    document.getElementById('status-activar').className = 'test-status status-active';
+    document.getElementById('result-activar').textContent = '✅ Sistema de seguridad ACTIVADO. Ahora prueba las demás funciones.';
+    addLog('Sistema de seguridad ACTIVADO', 'success');
+    updateMonitor();
+  }
+
+  // ── Visibilidad (cambio de pestaña) ────
+  document.addEventListener('visibilitychange', () => {
+    if (!sistemaActivo) return;
+    const resultEl = document.getElementById('result-pestana');
+    const countdownContainer = document.getElementById('countdown-container');
+
+    if (document.hidden) {
+      // Empieza countdown
+      countdownLeft = GRACIA;
+      countdownContainer.style.display = 'block';
+      document.getElementById('countdown-fill').style.width = '100%';
+      document.getElementById('countdown-text').textContent = `⏱ Tienes ${GRACIA} segundos para regresar...`;
+      addLog(`Saliste de la pestaña. Tienes ${GRACIA}s para regresar.`, 'warn');
+
+      timerGracia = setTimeout(() => {
+        strikes++;
+        updateMonitor();
+        if (strikes >= 2) {
+          addLog('🚫 EXAMEN ANULADO – Saliste de la pestaña 2 veces por más de 10 segundos', 'error');
+          resultEl.textContent = '🚫 ANULADO – 2 strikes alcanzados';
+          resultEl.style.color = '#e74c3c';
+          document.getElementById('status-pestana').textContent = 'ANULADO';
+          document.getElementById('status-pestana').className = 'test-status status-triggered';
+          showOverlay('🚫', 'EXAMEN ANULADO', 
+            'Saliste de la ventana del examen 2 veces por más de 10 segundos. En el examen real, tu nota sería 0.0 y no podrías volver a intentarlo.',
+            'danger');
+        } else {
+          addLog(`⚠️ Strike ${strikes}/2 – Estuviste fuera más de 10 segundos`, 'warn');
+          resultEl.textContent = `⚠️ ADVERTENCIA – Strike ${strikes}/2. Una más y el examen se anula.`;
+          resultEl.style.color = '#f1c40f';
+          document.getElementById('status-pestana').textContent = `${strikes}/2`;
+          document.getElementById('status-pestana').className = 'test-status status-active';
+          showOverlay('⚠️', 'Advertencia de Seguridad', 
+            `Saliste de la ventana del examen por más de 10 segundos. Esta es la advertencia ${strikes}/2. La próxima vez, el examen será anulado automáticamente.`,
+            'warning');
+        }
+      }, GRACIA * 1000);
+
+      // Countdown visual
+      let elapsed = 0;
+      clearInterval(countdownInterval);
+      countdownInterval = setInterval(() => {
+        elapsed++;
+        const pct = Math.max(0, ((GRACIA - elapsed) / GRACIA) * 100);
+        document.getElementById('countdown-fill').style.width = pct + '%';
+        document.getElementById('countdown-text').textContent = `⏱ Te quedan ${GRACIA - elapsed} segundos...`;
+        if (elapsed >= GRACIA) clearInterval(countdownInterval);
+      }, 1000);
+
+    } else {
+      // Regresó
+      if (timerGracia) {
+        clearTimeout(timerGracia);
+        timerGracia = null;
+        clearInterval(countdownInterval);
+        const secsOut = GRACIA - countdownLeft;
+        document.getElementById('countdown-fill').style.width = '100%';
+        document.getElementById('countdown-fill').style.background = '#2ecc71';
+        document.getElementById('countdown-text').textContent = `✅ Regresaste a tiempo. No se contó como strike.`;
+        addLog('Regresaste a tiempo ✓ (menos de 10 segundos)', 'success');
+        resultEl.textContent = '✅ Regresaste a tiempo. Sin penalización.';
+        resultEl.style.color = '#2ecc71';
+
+        setTimeout(() => {
+          document.getElementById('countdown-fill').style.background = '#f1c40f';
+        }, 2000);
+      }
+    }
+  });
+
+  // ── Clic derecho ─────────────────────────
+  document.addEventListener('contextmenu', (e) => {
+    if (sistemaActivo) {
+      e.preventDefault();
+      contextBlock++;
+      updateMonitor();
+      document.getElementById('result-clic').textContent = `🚫 Bloqueado (${contextBlock} intento${contextBlock > 1 ? 's' : ''})`;
+      document.getElementById('result-clic').style.color = '#e74c3c';
+      document.getElementById('status-clic').textContent = 'BLOQUEADO';
+      document.getElementById('status-clic').className = 'test-status status-triggered';
+      addLog('Clic derecho / long press BLOQUEADO', 'error');
+    }
+  });
+
+  // ── Teclado ──────────────────────────────
+  document.addEventListener('keydown', (e) => {
+    if (!sistemaActivo) return;
+    const ctrl = e.ctrlKey || e.metaKey;
+    const shift = e.shiftKey;
+    const key = e.key;
+
+    const bloqueados = [
+      ctrl && key === 'p',
+      ctrl && shift && key === 'S',
+      key === 'PrintScreen',
+      key === 'F12',
+      ctrl && shift && key === 'I',
+      ctrl && shift && key === 'J',
+      ctrl && shift && key === 'C',
+      ctrl && key === 'u',
+      ctrl && key === 's',
+      ctrl && key === 'a',
+      ctrl && key === 'c',
+    ];
+
+    if (bloqueados.some(Boolean)) {
+      e.preventDefault();
+      e.stopPropagation();
+      teclasBlock++;
+      updateMonitor();
+      let combo = '';
+      if (ctrl) combo += 'Ctrl+';
+      if (shift) combo += 'Shift+';
+      combo += key.toUpperCase();
+      document.getElementById('result-teclado').textContent = `🚫 Bloqueado: ${combo} (${teclasBlock} intento${teclasBlock > 1 ? 's' : ''})`;
+      document.getElementById('result-teclado').style.color = '#e74c3c';
+      document.getElementById('status-teclado').textContent = 'BLOQUEADO';
+      document.getElementById('status-teclado').className = 'test-status status-triggered';
+      addLog(`Tecla bloqueada: ${combo}`, 'error');
+      return false;
+    }
+  }, true);
+
+  // ── Overlay ──────────────────────────────
+  function showOverlay(icon, title, msg, type) {
+    document.getElementById('overlay-icon').textContent = icon;
+    document.getElementById('overlay-title').textContent = title;
+    document.getElementById('overlay-msg').textContent = msg;
+    const box = document.getElementById('overlay-box');
+    box.className = `overlay-box ${type === 'danger' ? 'danger-style' : 'warning-style'}`;
+    const btn = document.getElementById('overlay-btn');
+    btn.className = `overlay-btn ${type === 'danger' ? 'danger-btn' : 'warn-btn'}`;
+    document.getElementById('overlay-demo').classList.add('visible');
+  }
+
+  function cerrarOverlay() {
+    document.getElementById('overlay-demo').classList.remove('visible');
+  }
+
+  // ── Reset ────────────────────────────────
+  function resetDemo() {
+    sistemaActivo = false;
+    strikes = 0;
+    resizeStrikes = 0;
+    teclasBlock = 0;
+    contextBlock = 0;
+    clearTimeout(timerGracia);
+    clearInterval(countdownInterval);
+    timerGracia = null;
+
+    document.getElementById('status-activar').textContent = 'INACTIVO';
+    document.getElementById('status-activar').className = 'test-status status-ready';
+    document.getElementById('result-activar').textContent = 'Esperando activación...';
+
+    ['pestana', 'clic', 'teclado', 'recarga', 'dispositivo'].forEach(id => {
+      document.getElementById('status-' + id).textContent = 'LISTO';
+      document.getElementById('status-' + id).className = 'test-status status-ready';
+    });
+
+    document.getElementById('result-pestana').textContent = 'Activa el sistema y sal de la pestaña para probar...';
+    document.getElementById('result-pestana').style.color = '#2ecc71';
+    document.getElementById('result-clic').textContent = 'Intenta hacer clic derecho para probar...';
+    document.getElementById('result-clic').style.color = '#2ecc71';
+    document.getElementById('result-teclado').textContent = 'Presiona algún atajo bloqueado para probar...';
+    document.getElementById('result-teclado').style.color = '#2ecc71';
+    document.getElementById('countdown-container').style.display = 'none';
+
+    document.getElementById('log-entries').innerHTML = '';
+    updateMonitor();
+    addLog('Demo reiniciada. Activa el sistema para comenzar.', 'info');
+  }
+
+  // ── Auto-open primera tarjeta ──────────
+  document.addEventListener('DOMContentLoaded', () => {
+    toggleCard('activar');
+    updateMonitor();
+  });
+
+</script>
+</body>
+</html>

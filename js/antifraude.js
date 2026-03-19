@@ -147,44 +147,68 @@ const Antifraude = (() => {
   // VIGILANCIAS INDIVIDUALES
   // ══════════════════════════════════════════════════════════
 
+  // Periodo de gracia: el estudiante tiene N segundos para regresar
+  // antes de que se cuente como strike
+  const GRACIA_SEGUNDOS = 10;
+  let _timerGracia      = null;
+  let _timerBlur        = null;
+
   // 1. Cambio de pestaña / minimizar / cambiar app
   function _vigilarVisibilidad() {
-    // visibilitychange es confiable tanto en móvil como en escritorio
     document.addEventListener('visibilitychange', () => {
       if (!_examenActivo || _anulado) return;
+
       if (document.hidden) {
-        _strikesTab++;
-        localStorage.setItem(KEY_STRIKES, String(_strikesTab));
-
-        if (_strikesTab >= MAX_STRIKES) {
-          _registrarAnulado('Abandonaste la ventana del examen 2 veces. Examen anulado automáticamente.');
-        } else {
-          _callbackWarn && _callbackWarn(
-            'Advertencia de Seguridad',
-            `Saliste de la ventana del examen. Esta es la advertencia ${_strikesTab} de ${MAX_STRIKES}. Al salir nuevamente, el examen será anulado automáticamente.`,
-            _strikesTab
-          );
-        }
-      }
-    });
-
-    // blur = cambiar de aplicación (SOLO escritorio)
-    if (!_esMobile) {
-      window.addEventListener('blur', () => {
-        if (!_examenActivo || _anulado) return;
-        if (!document.hidden) {
+        // Inicia periodo de gracia: si regresa antes de GRACIA_SEGUNDOS, no pasa nada
+        _timerGracia = setTimeout(() => {
           _strikesTab++;
           localStorage.setItem(KEY_STRIKES, String(_strikesTab));
 
           if (_strikesTab >= MAX_STRIKES) {
-            _registrarAnulado('Cambiaste de aplicación o abriste otra ventana 2 veces. Examen anulado.');
+            _registrarAnulado('Abandonaste la ventana del examen 2 veces por más de 10 segundos. Examen anulado automáticamente.');
           } else {
             _callbackWarn && _callbackWarn(
               'Advertencia de Seguridad',
-              `Cambiaste de ventana. Advertencia ${_strikesTab} de ${MAX_STRIKES}. La próxima vez el examen será anulado.`,
+              `Saliste de la ventana del examen por más de 10 segundos. Esta es la advertencia ${_strikesTab} de ${MAX_STRIKES}. La próxima vez, el examen será anulado automáticamente.`,
               _strikesTab
             );
           }
+        }, GRACIA_SEGUNDOS * 1000);
+      } else {
+        // El estudiante regresó: cancelar el timer de gracia si existe
+        if (_timerGracia) {
+          clearTimeout(_timerGracia);
+          _timerGracia = null;
+        }
+      }
+    });
+
+    // blur = cambiar de aplicación (SOLO escritorio, con misma gracia)
+    if (!_esMobile) {
+      window.addEventListener('blur', () => {
+        if (!_examenActivo || _anulado) return;
+        if (!document.hidden) {
+          _timerBlur = setTimeout(() => {
+            _strikesTab++;
+            localStorage.setItem(KEY_STRIKES, String(_strikesTab));
+
+            if (_strikesTab >= MAX_STRIKES) {
+              _registrarAnulado('Cambiaste de aplicación por más de 10 segundos 2 veces. Examen anulado.');
+            } else {
+              _callbackWarn && _callbackWarn(
+                'Advertencia de Seguridad',
+                `Cambiaste de ventana por más de 10 segundos. Advertencia ${_strikesTab} de ${MAX_STRIKES}. La próxima vez el examen será anulado.`,
+                _strikesTab
+              );
+            }
+          }, GRACIA_SEGUNDOS * 1000);
+        }
+      });
+
+      window.addEventListener('focus', () => {
+        if (_timerBlur) {
+          clearTimeout(_timerBlur);
+          _timerBlur = null;
         }
       });
     }
