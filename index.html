@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Parcial – Procesos Industriales 1 | UNIPAZ</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <!-- Prevenir caché -->
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════
+     PANTALLA 0: BLOQUEADO (ya presentó o anulado)
+     ════════════════════════════════════════════ -->
+<div id="pantalla-bloqueado" class="pantalla oculto">
+  <div class="bloqueo-box">
+    <div class="bloqueo-icon">🔒</div>
+    <h1>ACCESO BLOQUEADO</h1>
+    <p id="bloqueo-mensaje">Ya presentaste este examen o fue anulado. No es posible volver a intentarlo.</p>
+    <div class="bloqueo-detalle" id="bloqueo-detalle"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PANTALLA 1: LOGIN
+     ════════════════════════════════════════════ -->
+<div id="pantalla-login" class="pantalla">
+  <div class="login-container">
+    <div class="login-header">
+      <div class="logo-unipaz">UNIPAZ</div>
+      <h1>Evaluación Parcial</h1>
+      <h2>Procesos Industriales 1</h2>
+      <p class="login-subtitulo">Ingeniería de Petróleo – Semestre 2025-2</p>
+    </div>
+
+    <div class="login-aviso">
+      <strong>IMPORTANTE – Lea antes de iniciar:</strong>
+      <ul>
+        <li>Una vez iniciado, <strong>no puede recargar</strong> la página.</li>
+        <li>Cambiar de pestaña o salir de la ventana <strong>2 veces</strong> anula el examen.</li>
+        <li>Dividir la pantalla anula el examen.</li>
+        <li>No puede repetir el examen tras finalizarlo.</li>
+        <li>Las preguntas tienen tiempo limitado por fase.</li>
+      </ul>
+    </div>
+
+    <form id="form-login" autocomplete="off">
+      <div class="campo-grupo">
+        <label for="nombre">Nombre completo</label>
+        <input type="text" id="nombre" name="nombre" placeholder="Ej: María García López" required maxlength="80" />
+      </div>
+      <div class="campo-grupo">
+        <label for="codigo">Código estudiantil</label>
+        <input type="text" id="codigo" name="codigo" placeholder="Ej: 20231234" required maxlength="20" pattern="[A-Za-z0-9\-]+" />
+      </div>
+      <div class="campo-grupo">
+        <label for="grupo">Grupo</label>
+        <select id="grupo" name="grupo" required>
+          <option value="">Seleccione su grupo</option>
+          <option value="A">Grupo A</option>
+          <option value="B">Grupo B</option>
+          <option value="C">Grupo C</option>
+        </select>
+      </div>
+
+      <div class="acepto-condiciones">
+        <input type="checkbox" id="acepto" required />
+        <label for="acepto">He leído y acepto las condiciones del examen</label>
+      </div>
+
+      <button type="submit" class="btn-iniciar">Iniciar Examen</button>
+    </form>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PANTALLA 2: EXAMEN
+     ════════════════════════════════════════════ -->
+<div id="pantalla-examen" class="pantalla oculto">
+
+  <!-- Header del examen -->
+  <header class="examen-header">
+    <div class="header-izq">
+      <span class="unipaz-tag">UNIPAZ</span>
+      <span class="materia-tag">Procesos Industriales 1</span>
+    </div>
+    <div class="header-centro">
+      <div id="fase-label" class="fase-label">Fase 1 de 5</div>
+      <div id="fase-titulo" class="fase-titulo">Cargando...</div>
+    </div>
+    <div class="header-der">
+      <div class="temporizador-box">
+        <span class="reloj-icon">⏱</span>
+        <span id="temporizador">25:00</span>
+      </div>
+      <div class="strikes-box" id="strikes-box">
+        <span title="Advertencias de cambio de pestaña">⚠ <span id="strikes-count">0</span>/2</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Barra de progreso -->
+  <div class="barra-progreso-container">
+    <div class="barra-progreso" id="barra-progreso"></div>
+    <span class="progreso-texto" id="progreso-texto">Pregunta 1 de 22</span>
+  </div>
+
+  <!-- Área de pregunta -->
+  <main class="examen-main">
+
+    <!-- Navegación de fases -->
+    <div class="fases-nav" id="fases-nav">
+      <button class="fase-btn activa" data-fase="1">Gas Natural</button>
+      <button class="fase-btn" data-fase="2">Petróleo</button>
+      <button class="fase-btn" data-fase="3">Procesos</button>
+      <button class="fase-btn" data-fase="4">Renovables</button>
+      <button class="fase-btn" data-fase="5">Explotación</button>
+    </div>
+
+    <!-- Gráfico (se muestra solo en fase 3) -->
+    <div id="area-grafico" class="area-grafico oculto">
+      <!-- SVG PERFORACIÓN -->
+      <div id="grafico-perforacion" class="grafico-svg oculto">
+        <h3 class="grafico-titulo">Diagrama: Torre de Perforación Rotaria</h3>
+        <svg viewBox="0 0 500 580" xmlns="http://www.w3.org/2000/svg" class="svg-diagrama">
+          <!-- Fondo -->
+          <rect width="500" height="580" fill="#f0f4f8" rx="8"/>
+          <!-- Suelo -->
+          <rect x="0" y="420" width="500" height="160" fill="#c8a96e" rx="0"/>
+          <text x="250" y="445" text-anchor="middle" fill="#5a3e1b" font-size="11" font-weight="bold">SUBSUELO / FORMACIÓN GEOLÓGICA</text>
+          <!-- Pozo -->
+          <rect x="225" y="320" width="50" height="120" fill="#8ba7c7" opacity="0.6"/>
+          <line x1="225" y1="320" x2="225" y2="440" stroke="#4a6fa5" stroke-width="2"/>
+          <line x1="275" y1="320" x2="275" y2="440" stroke="#4a6fa5" stroke-width="2"/>
+          <!-- Revestidor -->
+          <rect x="230" y="340" width="40" height="100" fill="none" stroke="#2c3e50" stroke-width="3" stroke-dasharray="5,3"/>
+          <!-- Sarta de perforación -->
+          <rect x="243" y="150" width="14" height="190" fill="#7f8c8d"/>
+          <!-- Broca -->
+          <polygon points="243,340 250,360 257,340" fill="#e74c3c"/>
+          <!-- Torre -->
+          <polygon points="250,20 200,300 300,300" fill="none" stroke="#2c3e50" stroke-width="3"/>
+          <line x1="210" y1="270" x2="290" y2="270" stroke="#2c3e50" stroke-width="2"/>
+          <line x1="215" y1="240" x2="285" y2="240" stroke="#2c3e50" stroke-width="2"/>
+          <line x1="222" y1="210" x2="278" y2="210" stroke="#2c3e50" stroke-width="2"/>
+          <line x1="228" y1="180" x2="272" y2="180" stroke="#2c3e50" stroke-width="2"/>
+          <!-- Crown block -->
+          <rect x="235" y="20" width="30" height="12" fill="#34495e" rx="2"/>
+          <text x="280" y="30" fill="#2c3e50" font-size="9" font-weight="bold">Corona (Crown Block)</text>
+          <!-- Travelling block -->
+          <rect x="237" y="135" width="26" height="14" fill="#e67e22" rx="2"/>
+          <text x="275" y="145" fill="#e67e22" font-size="9" font-weight="bold">Bloque Viajero</text>
+          <!-- Mesa rotaria -->
+          <rect x="220" y="300" width="60" height="10" fill="#95a5a6" rx="2"/>
+          <text x="160" y="309" fill="#7f8c8d" font-size="9" font-weight="bold">Mesa Rotaria</text>
+          <!-- BOP -->
+          <rect x="218" y="315" width="64" height="12" fill="#e74c3c" rx="2"/>
+          <text x="295" y="325" fill="#e74c3c" font-size="9" font-weight="bold">BOP</text>
+          <!-- Hoyo -->
+          <text x="295" y="390" fill="#2c3e50" font-size="9" font-weight="bold">Revestidor</text>
+          <text x="295" y="403" fill="#4a6fa5" font-size="9">Cementado</text>
+          <!-- Tanques de superficie -->
+          <rect x="330" y="290" width="70" height="35" fill="#27ae60" rx="4"/>
+          <text x="365" y="308" text-anchor="middle" fill="white" font-size="9" font-weight="bold">Tanques</text>
+          <text x="365" y="320" text-anchor="middle" fill="white" font-size="9">superficie</text>
+          <!-- Equipo de impulsión -->
+          <rect x="350" y="335" width="50" height="25" fill="#2980b9" rx="4"/>
+          <text x="375" y="351" text-anchor="middle" fill="white" font-size="9" font-weight="bold">Equipo A</text>
+          <!-- Líneas de circulación -->
+          <path d="M 400 307 Q 430 290 430 200 Q 430 140 250 148" stroke="#27ae60" stroke-width="2" fill="none" stroke-dasharray="4,2"/>
+          <path d="M 225 380 Q 180 400 160 380 Q 140 360 160 340 Q 180 320 330 305" stroke="#2980b9" stroke-width="2" fill="none" stroke-dasharray="4,2"/>
+          <!-- Leyenda (sin descripción de sistemas para no revelar respuestas) -->
+          <rect x="10" y="460" width="200" height="110" fill="white" rx="4" opacity="0.9"/>
+          <text x="110" y="475" text-anchor="middle" fill="#2c3e50" font-size="10" font-weight="bold">LEYENDA</text>
+          <rect x="18" y="482" width="12" height="8" fill="#27ae60"/>
+          <text x="35" y="490" fill="#2c3e50" font-size="9">Fluido de perforación</text>
+          <rect x="18" y="497" width="12" height="8" fill="#e74c3c"/>
+          <text x="35" y="505" fill="#2c3e50" font-size="9">Equipo de control (BOP / Broca)</text>
+          <rect x="18" y="512" width="12" height="8" fill="#e67e22"/>
+          <text x="35" y="520" fill="#2c3e50" font-size="9">Bloque viajero</text>
+          <rect x="18" y="527" width="12" height="8" fill="#7f8c8d"/>
+          <text x="35" y="535" fill="#2c3e50" font-size="9">Sarta de perforación</text>
+          <rect x="18" y="542" width="12" height="8" fill="#34495e"/>
+          <text x="35" y="550" fill="#2c3e50" font-size="9">Estructura de la torre</text>
+          <!-- Título -->
+          <text x="250" y="575" text-anchor="middle" fill="#7f8c8d" font-size="8">Torre de Perforación Rotaria – Esquema Didáctico</text>
+        </svg>
+      </div>
+
+      <!-- SVG SEPARADOR TRIFÁSICO -->
+      <div id="grafico-separador" class="grafico-svg oculto">
+        <h3 class="grafico-titulo">Diagrama: Separador Trifásico Horizontal</h3>
+        <svg viewBox="0 0 560 280" xmlns="http://www.w3.org/2000/svg" class="svg-diagrama">
+          <rect width="560" height="280" fill="#f8f9fa" rx="8"/>
+          <!-- Cuerpo del separador -->
+          <rect x="100" y="80" width="340" height="130" fill="#dfe6e9" stroke="#2c3e50" stroke-width="3" rx="20"/>
+          <!-- Zonas de fluido (sin etiquetas que revelen la respuesta) -->
+          <!-- Zona superior -->
+          <rect x="103" y="83" width="334" height="40" fill="#a8d8ea" rx="17" opacity="0.7"/>
+          <text x="270" y="108" text-anchor="middle" fill="#1a5276" font-size="11" font-weight="bold">ZONA A</text>
+          <!-- Zona media -->
+          <rect x="103" y="123" width="334" height="45" fill="#f39c12" opacity="0.6"/>
+          <text x="270" y="150" text-anchor="middle" fill="#6e2f0a" font-size="11" font-weight="bold">ZONA B</text>
+          <!-- Zona inferior -->
+          <rect x="103" y="168" width="334" height="39" fill="#2980b9" opacity="0.5" rx="0"/>
+          <text x="270" y="193" text-anchor="middle" fill="white" font-size="11" font-weight="bold">ZONA C</text>
+          <!-- Deflector entrada -->
+          <rect x="155" y="85" width="6" height="120" fill="#7f8c8d" rx="2"/>
+          <text x="165" y="78" fill="#7f8c8d" font-size="9">Deflector</text>
+          <!-- Componente interno P -->
+          <rect x="370" y="123" width="6" height="45" fill="#e74c3c" rx="2"/>
+          <!-- Cámara interior Q -->
+          <rect x="390" y="168" width="50" height="42" fill="#2980b9" opacity="0.4" stroke="#1a5276" stroke-width="2" rx="4"/>
+          <text x="415" y="192" text-anchor="middle" fill="#1a5276" font-size="8" font-weight="bold">Cámara</text>
+          <text x="415" y="203" text-anchor="middle" fill="#1a5276" font-size="8">interior</text>
+          <!-- ENTRADA -->
+          <rect x="20" y="128" width="80" height="22" fill="#8e44ad" rx="4"/>
+          <text x="60" y="143" text-anchor="middle" fill="white" font-size="10" font-weight="bold">ENTRADA</text>
+          <text x="60" y="158" text-anchor="middle" fill="#8e44ad" font-size="8">Fluido de pozo</text>
+          <line x1="100" y1="139" x2="80" y2="139" stroke="#8e44ad" stroke-width="3"/>
+          <polygon points="100,133 115,139 100,145" fill="#8e44ad"/>
+          <!-- SALIDA 1 -->
+          <rect x="450" y="83" width="80" height="22" fill="#1a5276" rx="4"/>
+          <text x="490" y="98" text-anchor="middle" fill="white" font-size="10" font-weight="bold">SALIDA 1</text>
+          <line x1="440" y1="103" x2="450" y2="94" stroke="#1a5276" stroke-width="2"/>
+          <polygon points="440,97 440,109 452,103" fill="#1a5276"/>
+          <!-- SALIDA 2 -->
+          <rect x="450" y="135" width="80" height="22" fill="#e67e22" rx="4"/>
+          <text x="490" y="150" text-anchor="middle" fill="white" font-size="10" font-weight="bold">SALIDA 2</text>
+          <line x1="440" y1="146" x2="450" y2="146" stroke="#e67e22" stroke-width="2"/>
+          <polygon points="440,140 440,152 452,146" fill="#e67e22"/>
+          <!-- SALIDA 3 -->
+          <rect x="450" y="185" width="80" height="22" fill="#2471a3" rx="4"/>
+          <text x="490" y="200" text-anchor="middle" fill="white" font-size="10" font-weight="bold">SALIDA 3</text>
+          <line x1="440" y1="196" x2="450" y2="196" stroke="#2471a3" stroke-width="2"/>
+          <polygon points="440,190 440,202 452,196" fill="#2471a3"/>
+          <!-- Instrumento de control -->
+          <rect x="300" y="55" width="80" height="18" fill="#27ae60" rx="4"/>
+          <text x="340" y="68" text-anchor="middle" fill="white" font-size="9" font-weight="bold">Instrumento C</text>
+          <line x1="340" y1="73" x2="340" y2="83" stroke="#27ae60" stroke-width="2"/>
+          <!-- Manómetro -->
+          <circle cx="200" cy="65" r="12" fill="#ecf0f1" stroke="#2c3e50" stroke-width="2"/>
+          <text x="200" y="69" text-anchor="middle" fill="#2c3e50" font-size="8" font-weight="bold">PI</text>
+          <line x1="200" y1="77" x2="200" y2="83" stroke="#2c3e50" stroke-width="1.5"/>
+          <!-- Nota -->
+          <text x="280" y="255" text-anchor="middle" fill="#7f8c8d" font-size="8">Separador Trifásico Horizontal – Esquema Didáctico</text>
+        </svg>
+      </div>
+
+      <!-- SVG EXPLORACIÓN SÍSMICA -->
+      <div id="grafico-exploracion" class="grafico-svg oculto">
+        <h3 class="grafico-titulo">Diagrama: Exploración Sísmica de Reflexión</h3>
+        <svg viewBox="0 0 560 300" xmlns="http://www.w3.org/2000/svg" class="svg-diagrama">
+          <rect width="560" height="300" fill="#eaf2f8" rx="8"/>
+          <!-- Superficie -->
+          <line x1="0" y1="80" x2="560" y2="80" stroke="#5d6d7e" stroke-width="2"/>
+          <text x="10" y="76" fill="#5d6d7e" font-size="9" font-weight="bold">SUPERFICIE</text>
+          <!-- Capas geológicas -->
+          <rect x="0" y="80" width="560" height="50" fill="#d5dbdb" opacity="0.5"/>
+          <text x="280" y="108" text-anchor="middle" fill="#626567" font-size="9">Capa 1 – Arenas superficiales</text>
+          <line x1="0" y1="130" x2="560" y2="130" stroke="#7f8c8d" stroke-width="1.5" stroke-dasharray="6,3"/>
+          <rect x="0" y="130" width="560" height="55" fill="#aab7b8" opacity="0.4"/>
+          <text x="280" y="160" text-anchor="middle" fill="#5d6d7e" font-size="9">Capa 2 – Lutitas (Shale)</text>
+          <line x1="0" y1="185" x2="560" y2="185" stroke="#7f8c8d" stroke-width="1.5" stroke-dasharray="6,3"/>
+          <rect x="0" y="185" width="560" height="60" fill="#85929e" opacity="0.4"/>
+          <text x="280" y="215" text-anchor="middle" fill="#2c3e50" font-size="9" font-weight="bold">Capa 3 – Arenisca Reservorio (OBJETIVO)</text>
+          <line x1="0" y1="245" x2="560" y2="245" stroke="#2c3e50" stroke-width="2"/>
+          <rect x="0" y="245" width="560" height="55" fill="#5d6d7e" opacity="0.5"/>
+          <text x="280" y="268" text-anchor="middle" fill="#ecf0f1" font-size="9">Capa 4 – Basamento</text>
+          <!-- Camión vibrador (fuente) -->
+          <rect x="40" y="55" width="55" height="25" fill="#e74c3c" rx="4"/>
+          <text x="67" y="68" text-anchor="middle" fill="white" font-size="8" font-weight="bold">FUENTE</text>
+          <text x="67" y="78" text-anchor="middle" fill="white" font-size="7">(Vibrador)</text>
+          <circle cx="50" cy="80" r="5" fill="#2c3e50"/>
+          <circle cx="85" cy="80" r="5" fill="#2c3e50"/>
+          <!-- Flecha fuente -->
+          <polygon points="67,80 63,92 71,92" fill="#e74c3c"/>
+          <!-- Geófonos en superficie -->
+          <text x="270" y="65" text-anchor="middle" fill="#27ae60" font-size="9" font-weight="bold">GEÓFONOS (Receptores)</text>
+          <line x1="190" y1="70" x2="450" y2="70" stroke="#27ae60" stroke-width="1"/>
+          <polygon points="200,67 200,73 206,70" fill="#27ae60"/>
+          <polygon points="230,67 230,73 236,70" fill="#27ae60"/>
+          <polygon points="260,67 260,73 266,70" fill="#27ae60"/>
+          <polygon points="290,67 290,73 296,70" fill="#27ae60"/>
+          <polygon points="320,67 320,73 326,70" fill="#27ae60"/>
+          <polygon points="350,67 350,73 356,70" fill="#27ae60"/>
+          <polygon points="380,67 380,73 386,70" fill="#27ae60"/>
+          <polygon points="410,67 410,73 416,70" fill="#27ae60"/>
+          <polygon points="440,67 440,73 446,70" fill="#27ae60"/>
+          <!-- Ondas sísmicas (arcos) -->
+          <path d="M 67 80 Q 130 120 200 130" stroke="#e74c3c" stroke-width="1.5" fill="none" stroke-dasharray="3,2" opacity="0.7"/>
+          <path d="M 67 80 Q 150 155 200 185" stroke="#e74c3c" stroke-width="1.5" fill="none" stroke-dasharray="3,2" opacity="0.7"/>
+          <path d="M 67 80 Q 160 185 200 245" stroke="#e74c3c" stroke-width="1.5" fill="none" stroke-dasharray="3,2" opacity="0.5"/>
+          <!-- Ondas reflejadas -->
+          <path d="M 200 130 Q 260 100 320 80" stroke="#2980b9" stroke-width="1.5" fill="none" stroke-dasharray="3,2" opacity="0.8"/>
+          <path d="M 200 185 Q 280 140 360 80" stroke="#27ae60" stroke-width="1.5" fill="none" stroke-dasharray="3,2" opacity="0.8"/>
+          <path d="M 200 245 Q 300 180 400 80" stroke="#8e44ad" stroke-width="1.5" fill="none" stroke-dasharray="3,2" opacity="0.7"/>
+          <!-- Punto de reflexión -->
+          <circle cx="200" cy="130" r="4" fill="#e74c3c"/>
+          <circle cx="200" cy="185" r="4" fill="#27ae60"/>
+          <circle cx="200" cy="245" r="4" fill="#8e44ad"/>
+          <text x="148" y="128" fill="#e74c3c" font-size="8">Reflector 1</text>
+          <text x="148" y="183" fill="#27ae60" font-size="8">Reflector 2</text>
+          <text x="148" y="243" fill="#8e44ad" font-size="8">Reflector 3</text>
+          <!-- Leyenda -->
+          <rect x="390" y="252" width="165" height="40" fill="white" rx="4" opacity="0.9"/>
+          <line x1="395" y1="261" x2="415" y2="261" stroke="#e74c3c" stroke-width="2" stroke-dasharray="3,2"/>
+          <text x="420" y="265" fill="#2c3e50" font-size="8">Onda incidente</text>
+          <line x1="395" y1="276" x2="415" y2="276" stroke="#2980b9" stroke-width="2" stroke-dasharray="3,2"/>
+          <text x="420" y="280" fill="#2c3e50" font-size="8">Onda reflejada</text>
+          <text x="280" y="292" text-anchor="middle" fill="#7f8c8d" font-size="8">Exploración Sísmica de Reflexión – Esquema Didáctico</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Pregunta -->
+    <div class="pregunta-container" id="pregunta-container">
+      <div class="pregunta-numero" id="pregunta-numero">Pregunta 1</div>
+      <div class="pregunta-enunciado" id="pregunta-enunciado"></div>
+      <div class="opciones-container" id="opciones-container"></div>
+    </div>
+
+    <!-- Navegación interna de pregunta -->
+    <div class="nav-preguntas">
+      <button id="btn-anterior" class="btn-nav" disabled>← Anterior</button>
+      <div class="indicadores-preguntas" id="indicadores-preguntas"></div>
+      <button id="btn-siguiente" class="btn-nav">Siguiente →</button>
+    </div>
+
+    <!-- Botón finalizar fase / examen -->
+    <div class="nav-fase">
+      <button id="btn-finalizar-fase" class="btn-fase oculto">Finalizar Fase →</button>
+      <button id="btn-enviar-examen" class="btn-enviar oculto">Enviar Examen</button>
+    </div>
+
+  </main>
+
+  <!-- Warning overlay (split screen, etc.) -->
+  <div id="overlay-warning" class="overlay-warning oculto">
+    <div class="warning-box">
+      <div class="warning-icon">⚠️</div>
+      <h2 id="warning-titulo">Advertencia</h2>
+      <p id="warning-mensaje"></p>
+      <button id="btn-warning-ok" class="btn-warning-ok">Entendido</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ════════════════════════════════════════════
+     PANTALLA 3: ANULADO
+     ════════════════════════════════════════════ -->
+<div id="pantalla-anulado" class="pantalla oculto">
+  <div class="anulado-container">
+    <div class="anulado-icon">🚫</div>
+    <h1 class="anulado-titulo">EXAMEN ANULADO</h1>
+    <p id="anulado-motivo" class="anulado-motivo"></p>
+    <div class="anulado-datos" id="anulado-datos"></div>
+    <p class="anulado-instruccion">Comuníquese con su docente para mayor información.</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PANTALLA 4: RESULTADOS
+     ════════════════════════════════════════════ -->
+<div id="pantalla-resultados" class="pantalla oculto">
+  <div class="resultados-container">
+    <div class="resultados-header">
+      <div class="logo-res">UNIPAZ</div>
+      <h1>Examen Finalizado</h1>
+      <p>Procesos Industriales 1 – Semestre 2025-2</p>
+    </div>
+
+    <div class="estudiante-info" id="estudiante-info"></div>
+
+    <div class="nota-principal" id="nota-principal">
+      <div class="nota-circulo">
+        <span class="nota-valor" id="nota-valor">0.0</span>
+        <span class="nota-sobre">/ 5.0</span>
+      </div>
+      <div class="nota-estado" id="nota-estado"></div>
+    </div>
+
+    <div class="desglose-notas">
+      <h3>Desglose por Fase</h3>
+      <div class="desglose-grid" id="desglose-grid"></div>
+    </div>
+
+    <div class="resultados-footer">
+      <p id="resultado-timestamp"></p>
+      <p class="footer-aviso">Sus resultados han sido enviados automáticamente al sistema.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="js/preguntas.js"></script>
+<script src="js/googleSheets.js"></script>
+<script src="js/antifraude.js"></script>
+<script src="js/examen.js"></script>
+
+</body>
+</html>
