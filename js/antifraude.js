@@ -1,6 +1,6 @@
 // ============================================================
 // SISTEMA ANTIFRAUDE – PROCESOS INDUSTRIALES 1
-// Ejecutar ANTES de iniciar el examen, escuchar durante todo
+// Compatible con escritorio y dispositivos móviles
 // ============================================================
 
 const Antifraude = (() => {
@@ -14,6 +14,10 @@ const Antifraude = (() => {
   let _callbackWarn   = null;
   const MAX_STRIKES   = 2;
   const MIN_WIDTH_PCT = 0.80; // 80% del ancho de pantalla
+
+  // ── Detección de móvil ────────────────────────────────────
+  const _esMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+                    || ('ontouchstart' in window && window.innerWidth < 1024);
 
   // ── Constantes de almacenamiento ─────────────────────────
   const KEY_PRESENTADO  = 'pi1_presentado';   // localStorage – permanente
@@ -81,10 +85,14 @@ const Antifraude = (() => {
     sessionStorage.setItem(KEY_RECARGADO, JSON.stringify({ codigo, t: Date.now() }));
 
     _vigilarVisibilidad();
-    _vigilarTamano();
     _vigilarTeclado();
-    _vigilarDevTools();
     _vigilarContextMenu();
+
+    // Solo activar en escritorio (en móviles causan falsos positivos)
+    if (!_esMobile) {
+      _vigilarTamano();
+      _vigilarDevTools();
+    }
   }
 
   // ── Marcar examen como completado (bloquea reload post-envío) ──
@@ -105,6 +113,8 @@ const Antifraude = (() => {
 
   // 1. Cambio de pestaña / minimizar / cambiar app
   function _vigilarVisibilidad() {
+    // visibilitychange es confiable tanto en móvil como en escritorio
+    // Solo se dispara cuando realmente se cambia de pestaña o app
     document.addEventListener('visibilitychange', () => {
       if (!_examenActivo || _anulado) return;
       if (document.hidden) {
@@ -124,27 +134,31 @@ const Antifraude = (() => {
     });
 
     // blur = cambiar de aplicación o abrir otra pestaña
-    window.addEventListener('blur', () => {
-      if (!_examenActivo || _anulado) return;
-      // Solo contar si la página ya está oculta (para no duplicar con visibilitychange)
-      if (!document.hidden) {
-        _strikesTab++;
-        sessionStorage.setItem(KEY_STRIKES, String(_strikesTab));
+    // EN MÓVIL: NO usar blur porque se dispara con teclado, notificaciones,
+    // barra de direcciones, etc. → genera falsos positivos
+    if (!_esMobile) {
+      window.addEventListener('blur', () => {
+        if (!_examenActivo || _anulado) return;
+        // Solo contar si la página NO está oculta (para no duplicar con visibilitychange)
+        if (!document.hidden) {
+          _strikesTab++;
+          sessionStorage.setItem(KEY_STRIKES, String(_strikesTab));
 
-        if (_strikesTab >= MAX_STRIKES) {
-          _registrarAnulado('Cambiaste de aplicación o abriste otra ventana 2 veces. Examen anulado.');
-        } else {
-          _callbackWarn && _callbackWarn(
-            'Advertencia de Seguridad',
-            `Cambiaste de ventana. Advertencia ${_strikesTab} de ${MAX_STRIKES}. La próxima vez el examen será anulado.`,
-            _strikesTab
-          );
+          if (_strikesTab >= MAX_STRIKES) {
+            _registrarAnulado('Cambiaste de aplicación o abriste otra ventana 2 veces. Examen anulado.');
+          } else {
+            _callbackWarn && _callbackWarn(
+              'Advertencia de Seguridad',
+              `Cambiaste de ventana. Advertencia ${_strikesTab} de ${MAX_STRIKES}. La próxima vez el examen será anulado.`,
+              _strikesTab
+            );
+          }
         }
-      }
-    });
+      });
+    }
   }
 
-  // 2. Reducción de ventana / pantalla dividida
+  // 2. Reducción de ventana / pantalla dividida (SOLO ESCRITORIO)
   function _vigilarTamano() {
     let timeoutResize = null;
 
@@ -173,7 +187,7 @@ const Antifraude = (() => {
             );
           }
         }
-      }, 600);
+      }, 800); // Tiempo más largo para evitar falsos positivos
     });
   }
 
@@ -201,7 +215,7 @@ const Antifraude = (() => {
         ctrl && key === 's',                    // Guardar página
         ctrl && key === 'a',                    // Seleccionar todo (en examen)
         ctrl && key === 'c',                    // Copiar
-        // Alt+Tab (cambiar ventana en Windows) – limitado pero intenta capturarse
+        // Alt+Tab (cambiar ventana en Windows)
         e.altKey && key === 'Tab',
       ];
 
@@ -213,7 +227,7 @@ const Antifraude = (() => {
     }, true); // capture phase para mayor prioridad
   }
 
-  // 4. Detectar apertura de DevTools
+  // 4. Detectar apertura de DevTools (SOLO ESCRITORIO)
   function _vigilarDevTools() {
     let devToolsOpen = false;
 
@@ -230,21 +244,9 @@ const Antifraude = (() => {
     };
 
     setInterval(check, 1500);
-
-    // Técnica adicional: console.log con getter
-    const el = new Image();
-    Object.defineProperty(el, 'id', {
-      get: () => {
-        if (_examenActivo && !_anulado) {
-          _registrarAnulado('Se detectaron herramientas de desarrollo del navegador (console).');
-        }
-        return '';
-      }
-    });
-    // No llamar console.log directamente para no activar en producción
   }
 
-  // 5. Bloquear menú contextual (clic derecho)
+  // 5. Bloquear menú contextual (clic derecho / long press)
   function _vigilarContextMenu() {
     document.addEventListener('contextmenu', (e) => {
       if (_examenActivo) e.preventDefault();
@@ -299,6 +301,7 @@ const Antifraude = (() => {
     marcarPresentado,
     getStrikes:  () => _strikesTab,
     estaAnulado: () => _anulado,
+    esMobile:    () => _esMobile,
   };
 
 })();
