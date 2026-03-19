@@ -73,10 +73,10 @@ const PREGUNTAS = {
     enunciado: "Una empresa encontró gas natural en un yacimiento donde también se extrae petróleo crudo. El gas sale mezclado con el líquido. ¿Cómo se clasifica este tipo de gas y cuál es su principal característica?",
     tipo: "opcion_multiple",
     opciones: [
-      { id: "a", texto: "Gas libre – Se encuentra en reservorios independientes sin contacto con crudo líquido" },
-      { id: "b", texto: "Gas asociado – Está disuelto o en contacto con el petróleo crudo en el yacimiento" },
-      { id: "c", texto: "Gas no convencional – Se extrae mediante fracturamiento hidráulico (fracking)" },
-      { id: "d", texto: "Gas sintético – Se obtiene por gasificación de carbón mineral en superficie" }
+      { id: "a", texto: "Gas libre" },
+      { id: "b", texto: "Gas asociado" },
+      { id: "c", texto: "Gas no convencional" },
+      { id: "d", texto: "Gas sintético" }
     ],
     respuestaCorrecta: "b",
     explicacion: "El gas asociado es aquel que se encuentra en contacto directo con el petróleo, ya sea disuelto en él o formando una capa de gas encima del crudo (gas cap). Su producción está ligada a la extracción de crudo, a diferencia del gas libre que tiene yacimientos independientes."
@@ -88,10 +88,10 @@ const PREGUNTAS = {
     enunciado: "En una planta de procesamiento de gas natural, el gas crudo contiene 3% de H₂S y 8% de CO₂, lo que lo hace corrosivo y tóxico. ¿Cuál proceso industrial se aplica para eliminar estos componentes ácidos?",
     tipo: "opcion_multiple",
     opciones: [
-      { id: "a", texto: "Deshidratación con glicol (TEG) – Elimina el vapor de agua mediante absorción" },
-      { id: "b", texto: "Endulzamiento con aminas (MEA/DEA/MDEA) – Absorbe el H₂S y CO₂ del gas" },
-      { id: "c", texto: "Criogénico (turboexpansión) – Separa los componentes por diferencia de punto de ebullición" },
-      { id: "d", texto: "Adsorción con tamices moleculares – Retiene moléculas de nitrógeno y mercurio" }
+      { id: "a", texto: "Deshidratación con glicol (TEG)" },
+      { id: "b", texto: "Endulzamiento con aminas (MEA/DEA/MDEA)" },
+      { id: "c", texto: "Proceso criogénico (turboexpansión)" },
+      { id: "d", texto: "Adsorción con tamices moleculares" }
     ],
     respuestaCorrecta: "b",
     explicacion: "El endulzamiento consiste en eliminar los gases ácidos (H₂S y CO₂) mediante absorción química con soluciones de aminas (MEA, DEA, MDEA). El gas resultante se llama 'gas dulce'. La deshidratación elimina agua, no gases ácidos. Los tamices moleculares remueven agua y mercurio."
@@ -118,10 +118,10 @@ const PREGUNTAS = {
     enunciado: "Colombia debe transportar gas natural desde los campos productores del Caribe hacia las ciudades del interior del país ubicadas a más de 1.200 km. ¿Cuál modalidad de transporte es la más adecuada para esta distancia terrestre?",
     tipo: "opcion_multiple",
     opciones: [
-      { id: "a", texto: "GNL (Gas Natural Licuado) en buques metaneros – Requiere licuefacción a -162°C y puertos especializados" },
-      { id: "b", texto: "GNC (Gas Natural Comprimido) en cilindros – Adecuado para distancias cortas menores a 300 km" },
-      { id: "c", texto: "Gasoducto de alta presión (entre 300 y 1.500 PSI) – Solución eficiente para transporte terrestre de largo alcance" },
-      { id: "d", texto: "Gas sintético vehicular (GSV) – Transporte en camiones cisterna presurizada a nivel atmosférico" }
+      { id: "a", texto: "GNL (Gas Natural Licuado) en buques metaneros" },
+      { id: "b", texto: "GNC (Gas Natural Comprimido) en cilindros" },
+      { id: "c", texto: "Gasoducto de alta presión (entre 300 y 1.500 PSI)" },
+      { id: "d", texto: "Gas sintético vehicular (GSV) en camiones cisterna" }
     ],
     respuestaCorrecta: "c",
     explicacion: "Para transporte terrestre de largo alcance, el gasoducto de alta presión es la solución más eficiente y económica. El GNL requiere infraestructura marítima costosa y es más usado en transporte intercontinental. El GNC es viable solo a cortas distancias por su baja densidad energética por volumen."
@@ -167,10 +167,10 @@ const PREGUNTAS = {
     enunciado: "En la refinería de Barrancabermeja, el crudo crudo entra a una torre de destilación atmosférica. ¿Qué principio físico-químico permite separar los diferentes derivados del petróleo en esta etapa?",
     tipo: "opcion_multiple",
     opciones: [
-      { id: "a", texto: "Diferencias en punto de ebullición de los hidrocarburos – Las fracciones más livianas suben y las más pesadas bajan" },
-      { id: "b", texto: "Diferencias en densidad – Los componentes más densos flotan sobre los menos densos" },
-      { id: "c", texto: "Diferencias en solubilidad – Los hidrocarburos polares se separan de los no polares" },
-      { id: "d", texto: "Diferencias en tamaño molecular – Se usa una membrana que filtra moléculas por tamaño" }
+      { id: "a", texto: "Diferencias en punto de ebullición de los hidrocarburos" },
+      { id: "b", texto: "Diferencias en densidad" },
+      { id: "c", texto: "Diferencias en solubilidad" },
+      { id: "d", texto: "Diferencias en tamaño molecular" }
     ],
     respuestaCorrecta: "a",
     explicacion: "La destilación fraccionada aprovecha las diferencias de puntos de ebullición de los hidrocarburos. En la torre, la temperatura disminuye de abajo hacia arriba: el residuo atmosférico (fueloil) queda en el fondo, el diésel sale en platos intermedios, la gasolina en platos superiores y los gases ligeros (GLP) en la parte alta."
@@ -182,10 +182,10 @@ const PREGUNTAS = {
     enunciado: "La refinería necesita aumentar la producción de gasolina de alto octano a partir de fracciones pesadas como el gasóleo de vacío. ¿Qué proceso de conversión catalítica se aplica para romper las moléculas grandes en moléculas más pequeñas y valiosas?",
     tipo: "opcion_multiple",
     opciones: [
-      { id: "a", texto: "Reformación catalítica – Convierte naftas en aromáticos de alto octano para gasolina" },
-      { id: "b", texto: "Cracking catalítico fluido (FCC) – Rompe moléculas pesadas usando calor y catalizador en lecho fluidizado" },
-      { id: "c", texto: "Alquilación – Combina isobutano y olefinas para producir alquilato de alto octano" },
-      { id: "d", texto: "Hidrodesulfuración (HDS) – Elimina azufre de las fracciones para cumplir normas ambientales" }
+      { id: "a", texto: "Reformación catalítica" },
+      { id: "b", texto: "Cracking catalítico fluido (FCC)" },
+      { id: "c", texto: "Alquilación" },
+      { id: "d", texto: "Hidrodesulfuración (HDS)" }
     ],
     respuestaCorrecta: "b",
     explicacion: "El Cracking Catalítico Fluido (FCC) es el proceso principal para convertir gasóleo pesado en gasolina y olefinas mediante catalizadores zeolíticos a alta temperatura (~500°C). La reformación catalítica mejora el octanaje de la nafta. La alquilación combina moléculas pequeñas. La HDS solo desulfura, no convierte."
@@ -394,17 +394,16 @@ OPCIÓN A – Planta Solar FV (10 MW):\n• Inversión: USD 8 millones\n• LCOE
   22: {
     id: 22,
     fase: 5,
-    enunciado: `ESCENARIO AMBIENTAL Y SOCIAL: La empresa "PetroAndes" solicitó licencia ambiental para desarrollar el Campo "Río Claro" en el piedemonte llanero. La ANLA identificó los siguientes impactos potenciales:\n
-• Afectación de 15 hectáreas de bosque de galería\n• Riesgo de derrames sobre el Río Cravo Sur (fuente de agua potable para 3 municipios)\n• Generación de 450 empleos directos locales\n• Emisiones de gas metano por quema de gas en tea\n\nComo ingeniero responsable del Plan de Manejo Ambiental (PMA), ¿cuál conjunto de medidas de mitigación es el más completo y técnicamente correcto?`,
+    enunciado: `ESCENARIO ESTRATÉGICO – DEPENDENCIA HIDROELÉCTRICA: Colombia genera aproximadamente el 70% de su energía eléctrica a partir de centrales hidroeléctricas. Durante el fenómeno de El Niño 2015-2016, los embalses bajaron a niveles críticos (por debajo del 30% de capacidad) y el país estuvo al borde del racionamiento. Datos del escenario:\n\n• Capacidad instalada actual: 17.000 MW (70% hidráulica)\n• Déficit proyectado en temporada seca severa: 3.500 MW\n• Zona disponible: altiplano cundiboyacense y costa Caribe\n• Presupuesto de inversión estatal: USD 2.000 millones\n• Plazo de ejecución: 5-8 años\n\nComo asesor del Ministerio de Minas y Energía, ¿cuál proyecto de diversificación energética es el más adecuado para reducir la dependencia hidroeléctrica y garantizar la seguridad del suministro?`,
     tipo: "opcion_multiple",
     opciones: [
-      { id: "a", texto: "Compensar las 15 ha de bosque con reforestación de 30 ha en otra zona, instalar sistema de doble contención en el oleoducto y quemar el gas en tea sin capturarlo porque es práctica estándar" },
-      { id: "b", texto: "Compensar bosque 1:3 (45 ha) en zona de recarga hídrica, instalar barreras de contención y sistema de detección temprana de derrames en el río, capturar y usar el gas en lugar de quemarlo, y priorizar contratación local con programa de desarrollo de proveedores" },
-      { id: "c", texto: "Pagar compensación económica a los municipios afectados para que compren agua embotellada en caso de derrame, y plantar árboles ornamentales en zonas urbanas como compensación por el bosque" },
-      { id: "d", texto: "Reducir el área del proyecto a 5 hectáreas para minimizar impactos, aunque esto reduzca la producción a niveles no comerciales y haga inviable económicamente el proyecto" }
+      { id: "a", texto: "Construir más represas hidroeléctricas de menor tamaño (PCH) distribuidas en ríos secundarios para descentralizar la generación hidráulica" },
+      { id: "b", texto: "Desarrollar un programa combinado de parques eólicos en La Guajira (2.000 MW) y granjas solares fotovoltaicas en la costa Caribe y el altiplano (1.500 MW), complementados con sistemas de almacenamiento por baterías a gran escala" },
+      { id: "c", texto: "Instalar centrales termoeléctricas a carbón en la costa Caribe, ya que Colombia tiene grandes reservas de carbón en Cesar y La Guajira" },
+      { id: "d", texto: "Importar electricidad desde Ecuador y Venezuela a través de interconexiones existentes para cubrir el déficit durante El Niño" }
     ],
     respuestaCorrecta: "b",
-    explicacion: "La opción B es la más completa bajo estándares ambientales colombianos e internacionales (ISO 14001, estándares IFC): compensación 1:3 en zona estratégica, sistemas de contención y monitoreo para proteger el agua potable, captura de gas (reduce emisiones GEI y genera valor), y programa de empleo local que maximiza el beneficio social. La quema en tea es una práctica que debe minimizarse por impacto climático. La compensación económica no reemplaza las medidas técnicas."
+    explicacion: "La combinación eólica + solar con almacenamiento es la mejor estrategia de diversificación por varias razones: (1) El viento en La Guajira sopla más fuerte en temporada seca (complementariedad con hidráulica), (2) La solar genera durante el día cuando hay mayor demanda, (3) Las baterías cubren la intermitencia, (4) Las PCH no resuelven la dependencia hídrica, (5) El carbón genera emisiones de CO₂ contrarias a los compromisos climáticos de Colombia, (6) Depender de importaciones crea vulnerabilidad geopolítica."
   }
 };
 
