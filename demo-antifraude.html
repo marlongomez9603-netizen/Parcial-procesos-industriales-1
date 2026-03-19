@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DEMO – Sistema de Seguridad del Parcial | UNIPAZ</title>
+  <style>
+    /* ── Variables ─────────────────────────────────── */
+    :root {
+      --verde:   #27ae60;
+      --azul:    #2980b9;
+      --rojo:    #e74c3c;
+      --naranja: #e67e22;
+      --oscuro:  #2c3e50;
+      --gris:    #7f8c8d;
+      --fondo:   #f0f4f8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--fondo);
+      color: var(--oscuro);
+    }
+
+    /* ── HERO ──────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(135deg, #1a3a5c 0%, #2c3e50 60%, #1a5276 100%);
+      color: white;
+      text-align: center;
+      padding: 48px 20px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        45deg, transparent, transparent 40px,
+        rgba(255,255,255,0.02) 40px, rgba(255,255,255,0.02) 42px
+      );
+    }
+
+    .demo-badge {
+      display: inline-block;
+      background: var(--naranja);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 3px;
+      padding: 5px 16px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .hero h1 {
+      font-size: 2rem;
+      font-weight: 900;
+      margin-bottom: 8px;
+      position: relative;
+    }
+
+    .hero h2 {
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: #a8c0d6;
+      margin-bottom: 6px;
+      position: relative;
+    }
+
+    .hero p {
+      font-size: 0.9rem;
+      color: #7fa8c9;
+      position: relative;
+    }
+
+    /* ── Aviso demo ───────────────────────────────── */
+    .aviso-demo {
+      background: #fff3cd;
+      border-left: 5px solid var(--naranja);
+      border-radius: 0;
+      padding: 14px 20px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #7d5a00;
+      font-weight: 600;
+    }
+
+    /* ── Contenido ────────────────────────────────── */
+    .contenido {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px 60px;
+    }
+
+    /* ── Sección ───────────────────────────────────── */
+    .seccion {
+      margin-bottom: 48px;
+    }
+
+    .seccion-titulo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #dde2e8;
+    }
+
+    .seccion-titulo .num {
+      width: 36px;
+      height: 36px;
+      background: var(--azul);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .seccion-titulo h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--oscuro);
+    }
+
+    /* ── Reglas grid ───────────────────────────────── */
+    .reglas-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .regla-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      border-top: 4px solid var(--rojo);
+      transition: transform 0.2s;
+    }
+
+    .regla-card:hover { transform: translateY(-2px); }
+
+    .regla-card.verde { border-top-color: var(--verde); }
+    .regla-card.naranja { border-top-color: var(--naranja); }
+    .regla-card.azul { border-top-color: var(--azul); }
+
+    .regla-icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .regla-card h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--oscuro);
+      margin-bottom: 6px;
+    }
+
+    .regla-card p {
+      font-size: 0.83rem;
+      color: var(--gris);
+      line-height: 1.5;
+    }
+
+    .regla-consecuencia {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .consecuencia-rojo { background: #fadbd8; color: var(--rojo); }
+    .consecuencia-naranja { background: #fdebd0; color: var(--naranja); }
+    .consecuencia-verde { background: #d5f5e3; color: var(--verde); }
+
+    /* ── Demo interactiva ─────────────────────────── */
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+    }
+
+    .demo-btn-card {
+      background: white;
+      border-radius: 12px;
+      padding: 22px 18px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+    }
+
+    .demo-btn-card:hover {
+      border-color: var(--azul);
+      transform: translateY(-2px);
+    }
+
+    .demo-btn-card .demo-icon { font-size: 2.5rem; margin-bottom: 10px; }
+
+    .demo-btn-card h4 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--oscuro);
+      margin-bottom: 6px;
+    }
+
+    .demo-btn-card p {
+      font-size: 0.78rem;
+      color: var(--gris);
+      margin-bottom: 14px;
+      line-height: 1.4;
+    }
+
+    .btn-demo {
+      padding: 8px 20px;
+      border: none;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .btn-demo:hover { opacity: 0.85; }
+    .btn-rojo { background: var(--rojo); color: white; }
+    .btn-naranja { background: var(--naranja); color: white; }
+    .btn-verde { background: var(--verde); color: white; }
+    .btn-azul { background: var(--azul); color: white; }
+    .btn-oscuro { background: var(--oscuro); color: white; }
+
+    /* ── Timeline del examen ─────────────────────── */
+    .timeline {
+      position: relative;
+      padding-left: 32px;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 10px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: #dde2e8;
+    }
+
+    .tl-item {
+      position: relative;
+      margin-bottom: 20px;
+      background: white;
+      border-radius: 10px;
+      padding: 16px 18px;
+      box-shadow: 0 1px 8px rgba(0,0,0,0.07);
+    }
+
+    .tl-item::before {
+      content: '';
+      position: absolute;
+      left: -26px;
+      top: 20px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--azul);
+      border: 2px solid white;
+      box-shadow: 0 0 0 2px var(--azul);
+    }
+
+    .tl-item h4 {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--oscuro);
+      margin-bottom: 4px;
+    }
+
+    .tl-item p { font-size: 0.83rem; color: var(--gris); line-height: 1.5; }
+
+    .tl-tiempo {
+      display: inline-block;
+      background: var(--fondo);
+      color: var(--azul);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 8px;
+      margin-bottom: 6px;
+    }
+
+    /* ── Preguntas resumen ──────────────────────── */
+    .fases-tabla {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      font-size: 0.88rem;
+    }
+
+    .fases-tabla thead tr { background: #1a3a5c; color: white; }
+    .fases-tabla th { padding: 12px 16px; text-align: left; font-weight: 600; }
+    .fases-tabla td { padding: 11px 16px; border-bottom: 1px solid #f0f4f8; }
+    .fases-tabla tbody tr:last-child td { border-bottom: none; }
+    .fases-tabla tbody tr:nth-child(even) { background: #f8f9fa; }
+
+    .badge-fase {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 10px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    /* ── Consejos ─────────────────────────────────── */
+    .consejos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .consejo-card {
+      background: white;
+      border-radius: 10px;
+      padding: 18px;
+      box-shadow: 0 1px 8px rgba(0,0,0,0.07);
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .consejo-icon { font-size: 1.5rem; flex-shrink: 0; }
+
+    .consejo-card h4 {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--oscuro);
+      margin-bottom: 4px;
+    }
+
+    .consejo-card p { font-size: 0.8rem; color: var(--gris); line-height: 1.4; }
+
+    /* ── Mockup examen ─────────────────────────────── */
+    .mockup-examen {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+      overflow: hidden;
+    }
+
+    .mockup-header {
+      background: linear-gradient(135deg, #1a3a5c, #2c3e50);
+      color: white;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .mockup-header .m-left { display: flex; gap: 10px; align-items: center; }
+    .mockup-logo {
+      background: white; color: #1a3a5c;
+      font-weight: 900; font-size: 0.7rem;
+      padding: 2px 8px; border-radius: 3px;
+      letter-spacing: 2px;
+    }
+
+    .mockup-fase { font-size: 0.82rem; color: #a8c0d6; }
+
+    .mockup-timer {
+      background: rgba(255,255,255,0.12);
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-size: 1.25rem;
+      font-weight: 700;
+      font-family: monospace;
+      color: #2ecc71;
+    }
+
+    .mockup-barra { height: 5px; background: #d5d8dc; }
+    .mockup-barra-fill { height: 100%; background: var(--verde); width: 35%; }
+
+    .mockup-body { padding: 20px; }
+
+    .mockup-pregnum {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--azul);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+
+    .mockup-enunciado {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--oscuro);
+      margin-bottom: 18px;
+      padding: 14px;
+      background: var(--fondo);
+      border-radius: 8px;
+    }
+
+    .mockup-opcion {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border: 2px solid #dde2e8;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      font-size: 0.84rem;
+    }
+
+    .mockup-opcion.sel { border-color: var(--azul); background: #d6eaf8; }
+
+    .mockup-letra {
+      width: 26px; height: 26px;
+      background: #d5d8dc;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.78rem;
+      flex-shrink: 0;
+    }
+
+    .mockup-opcion.sel .mockup-letra { background: var(--azul); color: white; }
+
+    /* ── MODALES DE DEMO ──────────────────────────── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 9000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s;
+    }
+
+    .modal-overlay.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-box {
+      max-width: 480px;
+      width: 90%;
+      border-radius: 16px;
+      padding: 40px 36px;
+      text-align: center;
+      transform: scale(0.9);
+      transition: transform 0.25s;
+    }
+
+    .modal-overlay.visible .modal-box { transform: scale(1); }
+
+    /* Modal warning */
+    .modal-warning { background: white; }
+    .modal-warning .m-icon { font-size: 52px; margin-bottom: 12px; }
+    .modal-warning h2 { color: var(--naranja); font-size: 1.4rem; margin-bottom: 10px; }
+    .modal-warning p { color: #555; font-size: 0.92rem; line-height: 1.6; margin-bottom: 22px; }
+
+    /* Modal anulado */
+    .modal-anulado {
+      background: #16213e;
+      border: 3px solid var(--rojo);
+      animation: pulse-rojo 2s infinite;
+    }
+
+    @keyframes pulse-rojo {
+      0%,100% { box-shadow: 0 0 40px rgba(231,76,60,0.3); }
+      50% { box-shadow: 0 0 70px rgba(231,76,60,0.55); }
+    }
+
+    .modal-anulado .m-icon { font-size: 60px; margin-bottom: 10px; }
+    .modal-anulado h2 { color: var(--rojo); font-size: 2rem; letter-spacing: 3px; margin-bottom: 12px; font-weight: 900; }
+    .modal-anulado p { color: #f1948a; font-size: 0.95rem; line-height: 1.6; margin-bottom: 18px; }
+    .modal-anulado .m-detail { background: rgba(231,76,60,0.1); border-radius: 8px; padding: 12px; color: #bdc3c7; font-size: 0.85rem; margin-bottom: 20px; }
+    .modal-anulado .m-footer { color: #7f8c8d; font-size: 0.82rem; font-style: italic; }
+
+    /* Modal bloqueado */
+    .modal-bloqueado {
+      background: #16213e;
+      border: 3px solid #e74c3c;
+    }
+
+    .modal-bloqueado h2 { color: var(--rojo); font-size: 1.6rem; letter-spacing: 2px; margin-bottom: 12px; font-weight: 900; }
+    .modal-bloqueado p { color: #bdc3c7; font-size: 0.92rem; line-height: 1.6; margin-bottom: 20px; }
+
+    /* Modal resultados */
+    .modal-resultados { background: white; }
+    .modal-resultados h2 { color: var(--verde); font-size: 1.4rem; margin-bottom: 10px; }
+    .nota-demo { font-size: 3.5rem; font-weight: 900; color: var(--verde); }
+    .desglose-demo { text-align: left; margin-top: 16px; }
+    .desglose-demo .df {
+      display: flex; justify-content: space-between;
+      padding: 7px 10px; border-bottom: 1px solid #f0f4f8;
+      font-size: 0.82rem; color: var(--oscuro);
+    }
+    .desglose-demo .df:last-child { border-bottom: none; }
+
+    /* Botones del modal */
+    .btn-cerrar-modal {
+      padding: 11px 28px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      background: var(--azul);
+      color: white;
+      margin-top: 4px;
+    }
+
+    .btn-cerrar-modal.naranja { background: var(--naranja); }
+    .btn-cerrar-modal.rojo { background: var(--rojo); }
+    .btn-cerrar-modal.gris { background: #636e72; }
+
+    .demo-label {
+      display: inline-block;
+      background: var(--naranja);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      padding: 3px 10px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+    }
+
+    /* ── Nota final ─────────────────────────────── */
+    .nota-final-box {
+      background: linear-gradient(135deg, #1a3a5c, #2c3e50);
+      color: white;
+      border-radius: 14px;
+      padding: 32px;
+      text-align: center;
+    }
+
+    .nota-final-box h3 { font-size: 1.3rem; margin-bottom: 10px; }
+    .nota-final-box p { color: #a8c0d6; font-size: 0.9rem; line-height: 1.6; }
+    .nota-final-box strong { color: #2ecc71; }
+
+    /* ── Responsive ─────────────────────────────── */
+    @media (max-width: 640px) {
+      .hero h1 { font-size: 1.5rem; }
+      .reglas-grid { grid-template-columns: 1fr; }
+      .demo-grid { grid-template-columns: 1fr; }
+      .mockup-header { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="demo-badge">⚠ SESIÓN INFORMATIVA</div>
+  <h1>Sistema de Seguridad del Parcial</h1>
+  <h2>Procesos Industriales 1 – UNIPAZ</h2>
+  <p>Aprende cómo funciona el sistema de vigilancia <strong>antes</strong> de iniciar tu examen</p>
+</div>
+
+<div class="aviso-demo">
+  🔔 Esta página es solo de <strong>demostración</strong>. El examen real está en un enlace diferente que el docente compartirá en el momento indicado.
+</div>
+
+<div class="contenido">
+
+  <!-- ── SECCIÓN 1: REGLAS ─────────────────────── -->
+  <div class="seccion">
+    <div class="seccion-titulo">
+      <div class="num">1</div>
+      <h3>Reglas que debes conocer</h3>
+    </div>
+
+    <div class="reglas-grid">
+
+      <div class="regla-card">
+        <span class="regla-icon">🔄</span>
+        <h4>No recargar la página</h4>
+        <p>Si presionas F5, Ctrl+R o el botón de recargar mientras el examen está activo, el sistema lo detecta de inmediato.</p>
+        <span class="regla-consecuencia consecuencia-rojo">🚫 Anulación inmediata</span>
+      </div>
+
+      <div class="regla-card">
+        <span class="regla-icon">🗂️</span>
+        <h4>No cambiar de pestaña ni de aplicación</h4>
+        <p>Si minimizas la ventana, cambias de pestaña o abres otra aplicación, recibes una advertencia. A la <strong>segunda vez</strong>, el examen se anula automáticamente.</p>
+        <span class="regla-consecuencia consecuencia-naranja">⚠ 1ª vez: advertencia</span><br/>
+        <span class="regla-consecuencia consecuencia-rojo" style="margin-top:5px">🚫 2ª vez: anulación</span>
+      </div>
+
+      <div class="regla-card">
+        <span class="regla-icon">📱</span>
+        <h4>No dividir la pantalla</h4>
+        <p>El sistema detecta si reduces el tamaño de la ventana del examen o usas modo "Snap" para dividir la pantalla.</p>
+        <span class="regla-consecuencia consecuencia-naranja">⚠ 1ª vez: advertencia</span><br/>
+        <span class="regla-consecuencia consecuencia-rojo" style="margin-top:5px">🚫 2ª vez: anulación</span>
+      </div>
+
+      <div class="regla-card">
+        <span class="regla-icon">🛠️</span>
+        <h4>No abrir Herramientas de Desarrollador</h4>
+        <p>La apertura de DevTools (F12, Ctrl+Shift+I) es detectada automáticamente.</p>
+        <span class="regla-consecuencia consecuencia-rojo">🚫 Anulación inmediata</span>
+      </div>
+
+      <div class="regla-card">
+        <span class="regla-icon">📸</span>
+        <h4>No tomar capturas de pantalla</h4>
+        <p>Las teclas PrintScreen, Ctrl+P (imprimir) y Ctrl+S (guardar) están bloqueadas durante el examen. El contenido también está protegido visualmente.</p>
+        <span class="regla-consecuencia consecuencia-naranja">⛔ Teclado bloqueado</span>
+      </div>
+
+      <div class="regla-card naranja">
+        <span class="regla-icon">🔒</span>
+        <h4>Sin reintentos</h4>
+        <p>Tu código estudiantil queda registrado al enviar el examen. Si intentas volver a presentarlo (misma sesión u otra), el sistema te bloquea de forma permanente.</p>
+        <span class="regla-consecuencia consecuencia-rojo">🚫 Acceso bloqueado</span>
+      </div>
+
+      <div class="regla-card verde">
+        <span class="regla-icon">✅</span>
+        <h4>Lo que SÍ puedes hacer</h4>
+        <p>Mantener la ventana en pantalla completa, usar el ratón para seleccionar respuestas, navegar entre preguntas con los botones y tomarte el tiempo disponible.</p>
+        <span class="regla-consecuencia consecuencia-verde">✓ Sin restricciones</span>
+      </div>
+
+      <div class="regla-card azul">
+        <span class="regla-icon">⏱</span>
+        <h4>Tiempo total: 150 minutos</h4>
+        <p>El reloj corre de corrido durante todo el examen (2 horas 30 minutos). No se reinicia entre fases. Al agotarse, el examen se envía automáticamente.</p>
+        <span class="regla-consecuencia consecuencia-naranja">⏱ 2:30:00 de tiempo</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── SECCIÓN 2: DEMO INTERACTIVA ──────────── -->
+  <div class="seccion">
+    <div class="seccion-titulo">
+      <div class="num">2</div>
+      <h3>¿Qué verás si cometes una infracción? — Simulación</h3>
+    </div>
+    <p style="color:var(--gris); margin-bottom:20px; font-size:0.9rem;">
+      Haz clic en cada botón para ver <strong>exactamente</strong> cómo se ven las pantallas durante el examen real. Esto es solo una simulación — no afecta nada.
+    </p>
+
+    <div class="demo-grid">
+
+      <div class="demo-btn-card" onclick="abrirModal('modal-warning-1')">
+        <div class="demo-icon">⚠️</div>
+        <h4>1ª advertencia por cambio de pestaña</h4>
+        <p>Lo que verás la primera vez que salgas de la ventana del examen.</p>
+        <button class="btn-demo btn-naranja">Ver advertencia</button>
+      </div>
+
+      <div class="demo-btn-card" onclick="abrirModal('modal-anulado-tab')">
+        <div class="demo-icon">🚫</div>
+        <h4>Anulación por cambio de pestaña</h4>
+        <p>Lo que verás la segunda vez que salgas de la ventana.</p>
+        <button class="btn-demo btn-rojo">Ver anulación</button>
+      </div>
+
+      <div class="demo-btn-card" onclick="abrirModal('modal-anulado-recarga')">
+        <div class="demo-icon">🔄</div>
+        <h4>Anulación por recarga de página</h4>
+        <p>Lo que verás si presionas F5 o recargas durante el examen.</p>
+        <button class="btn-demo btn-rojo">Ver anulación</button>
+      </div>
+
+      <div class="demo-btn-card" onclick="abrirModal('modal-anulado-split')">
+        <div class="demo-icon">📱</div>
+        <h4>Anulación por dividir pantalla</h4>
+        <p>Lo que verás si reduces o divides la ventana del examen.</p>
+        <button class="btn-demo btn-rojo">Ver anulación</button>
+      </div>
+
+      <div class="demo-btn-card" onclick="abrirModal('modal-bloqueado')">
+        <div class="demo-icon">🔒</div>
+        <h4>Pantalla de acceso bloqueado</h4>
+        <p>Lo que verás si intentas volver a presentar el examen.</p>
+        <button class="btn-demo btn-oscuro">Ver bloqueo</button>
+      </div>
+
+      <div class="demo-btn-card" onclick="abrirModal('modal-resultados')">
+        <div class="demo-icon">🎓</div>
+        <h4>Pantalla de resultados</h4>
+        <p>Así se verá tu nota al finalizar correctamente el examen.</p>
+        <button class="btn-demo btn-verde">Ver resultados</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── SECCIÓN 3: CÓMO ES EL EXAMEN ─────────── -->
+  <div class="seccion">
+    <div class="seccion-titulo">
+      <div class="num">3</div>
+      <h3>Vista previa de la interfaz del examen</h3>
+    </div>
+
+    <div class="mockup-examen">
+      <div class="mockup-header">
+        <div class="m-left">
+          <span class="mockup-logo">UNIPAZ</span>
+          <span class="mockup-fase">Procesos Industriales 1</span>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:0.72rem;color:#a8c0d6;margin-bottom:2px">Fase 2 de 5</div>
+          <div style="font-size:0.85rem;color:white;font-weight:600">Fase II: Cadena de Valor del Petróleo</div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:center">
+          <div class="mockup-timer">2:14:37</div>
+          <div style="background:rgba(231,76,60,0.2);border:1px solid rgba(231,76,60,0.4);border-radius:8px;padding:5px 12px;font-size:0.82rem;color:#f1948a">
+            ⚠ 0/2
+          </div>
+        </div>
+      </div>
+      <div class="mockup-barra"><div class="mockup-barra-fill"></div></div>
+      <div class="mockup-body">
+        <div class="mockup-pregnum">Pregunta 7 de 22 · Fase 2 – Pregunta 2 de 5</div>
+        <div class="mockup-enunciado">
+          En un laboratorio, se miden tres muestras de crudo con gravedades API de 12°, 28° y 42°. ¿Cómo se clasifican y cuál tiene mayor valor comercial en el mercado internacional?
+        </div>
+        <div class="mockup-opcion">
+          <div class="mockup-letra">A</div>
+          <div>12° API = Liviano (mayor valor); 28° API = Mediano; 42° API = Pesado (menor valor)</div>
+        </div>
+        <div class="mockup-opcion sel">
+          <div class="mockup-letra">B</div>
+          <div>12° API = Pesado (menor valor); 28° API = Mediano; 42° API = Liviano (mayor valor)</div>
+        </div>
+        <div class="mockup-opcion">
+          <div class="mockup-letra">C</div>
+          <div>Los tres son crudos medianos; la gravedad API no determina el valor comercial</div>
+        </div>
+        <div class="mockup-opcion">
+          <div class="mockup-letra">D</div>
+          <div>12° API = Extra pesado; 28° API = Liviano; 42° API = Condensado de gas</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECCIÓN 4: FASES Y PONDERACIÓN ────────── -->
+  <div class="seccion">
+    <div class="seccion-titulo">
+      <div class="num">4</div>
+      <h3>Estructura y ponderación del examen</h3>
+    </div>
+
+    <table class="fases-tabla">
+      <thead>
+        <tr>
+          <th>Fase</th>
+          <th>Tema</th>
+          <th>Preguntas</th>
+          <th>Puntos</th>
+          <th>Característica</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge-fase" style="background:#d6eaf8;color:#1a5276">Fase I</span></td>
+          <td>Cadena de Valor del Gas Natural</td>
+          <td style="text-align:center">5</td>
+          <td style="text-align:center;font-weight:700">1.00</td>
+          <td style="color:var(--gris);font-size:0.82rem">Conceptos y procesos</td>
+        </tr>
+        <tr>
+          <td><span class="badge-fase" style="background:#d5f5e3;color:#1e8449">Fase II</span></td>
+          <td>Cadena de Valor del Petróleo</td>
+          <td style="text-align:center">5</td>
+          <td style="text-align:center;font-weight:700">1.00</td>
+          <td style="color:var(--gris);font-size:0.82rem">Conceptos y procesos</td>
+        </tr>
+        <tr>
+          <td><span class="badge-fase" style="background:#fdebd0;color:#a04000">Fase III</span></td>
+          <td>Procesos Técnicos con Diagramas</td>
+          <td style="text-align:center">5</td>
+          <td style="text-align:center;font-weight:700">1.00</td>
+          <td style="color:var(--gris);font-size:0.82rem">Lectura de gráficos SVG</td>
+        </tr>
+        <tr>
+          <td><span class="badge-fase" style="background:#fdedec;color:#922b21">Fase IV</span></td>
+          <td>Toma de Decisiones – Energías Renovables</td>
+          <td style="text-align:center">3</td>
+          <td style="text-align:center;font-weight:700">0.75</td>
+          <td style="color:var(--gris);font-size:0.82rem">Escenarios de decisión</td>
+        </tr>
+        <tr>
+          <td><span class="badge-fase" style="background:#e8daef;color:#6c3483">Fase V</span></td>
+          <td>Toma de Decisiones – Explotación Petrolera</td>
+          <td style="text-align:center">4</td>
+          <td style="text-align:center;font-weight:700;color:var(--verde)">1.25</td>
+          <td style="color:var(--gris);font-size:0.82rem">Mayor peso analítico</td>
+        </tr>
+        <tr style="background:#f8f9fa;font-weight:700">
+          <td colspan="2" style="text-align:right;color:var(--oscuro)">TOTAL</td>
+          <td style="text-align:center">22</td>
+          <td style="text-align:center;color:var(--azul)">5.00</td>
+          <td style="color:var(--verde);font-size:0.82rem">Aprobación: ≥ 3.0</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── SECCIÓN 5: FLUJO DEL EXAMEN ───────────── -->
+  <div class="seccion">
+    <div class="seccion-titulo">
+      <div class="num">5</div>
+      <h3>¿Cómo transcurre el examen?</h3>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <span class="tl-tiempo">Antes de iniciar</span>
+        <h4>📋 Ingresa tus datos</h4>
+        <p>Escribe tu nombre completo, código estudiantil y selecciona tu grupo. Acepta las condiciones y haz clic en <strong>"Iniciar Examen"</strong>. Desde ese momento el reloj empieza.</p>
+      </div>
+      <div class="tl-item">
+        <span class="tl-tiempo">Fase I a III</span>
+        <h4>📝 Responde las preguntas por fase</h4>
+        <p>Navega con los botones "Anterior" y "Siguiente". Los indicadores de color muestran cuáles ya respondiste. Al terminar una fase haz clic en <strong>"Finalizar Fase →"</strong> para avanzar. <strong>No puedes volver a la fase anterior.</strong></p>
+      </div>
+      <div class="tl-item">
+        <span class="tl-tiempo">Fase III</span>
+        <h4>📊 Preguntas con diagramas</h4>
+        <p>En la Fase III aparecerán diagramas técnicos (torre de perforación, separador, exploración sísmica). Analízalos con calma antes de responder.</p>
+      </div>
+      <div class="tl-item">
+        <span class="tl-tiempo">Fase IV y V</span>
+        <h4>🧠 Escenarios de toma de decisiones</h4>
+        <p>Se presentan situaciones reales con datos técnicos y económicos. Lee todo el escenario antes de seleccionar tu respuesta. Todas las opciones son de selección múltiple.</p>
+      </div>
+      <div class="tl-item">
+        <span class="tl-tiempo">Al finalizar</span>
+        <h4>📤 Envío y resultados</h4>
+        <p>Al responder la última pregunta aparece el botón <strong>"Enviar Examen"</strong>. Al confirmarlo, tus resultados se envían automáticamente. Verás tu nota desglosada por fase.</p>
+      </div>
+      <div class="tl-item" style="border-left:3px solid var(--verde)">
+        <span class="tl-tiempo" style="color:var(--verde)">Importante</span>
+        <h4>🔒 Queda registrado para siempre</h4>
+        <p>Tu código estudiantil queda en el sistema. Si recargas después de enviar, verás la pantalla de bloqueo. El docente recibe tu nota en tiempo real.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECCIÓN 6: CONSEJOS ───────────────────── -->
+  <div class="seccion">
+    <div class="seccion-titulo">
+      <div class="num">6</div>
+      <h3>Consejos para no cometer errores</h3>
+    </div>
+
+    <div class="consejos-grid">
+      <div class="consejo-card">
+        <div class="consejo-icon">🖥️</div>
+        <div>
+          <h4>Pantalla completa</h4>
+          <p>Presiona F11 antes de iniciar para poner el navegador en pantalla completa. Reduce el riesgo de que el sistema detecte un cambio de tamaño.</p>
+        </div>
+      </div>
+      <div class="consejo-card">
+        <div class="consejo-icon">📵</div>
+        <div>
+          <h4>Cierra todo lo demás</h4>
+          <p>Antes de iniciar cierra todas las otras pestañas, aplicaciones y notificaciones del sistema operativo.</p>
+        </div>
+      </div>
+      <div class="consejo-card">
+        <div class="consejo-icon">🔋</div>
+        <div>
+          <h4>Verifica batería y conexión</h4>
+          <p>Conéctate a la corriente y asegura una conexión de red estable. Una caída de internet puede impedir el envío de resultados.</p>
+        </div>
+      </div>
+      <div class="consejo-card">
+        <div class="consejo-icon">⏱️</div>
+        <div>
+          <h4>Administra tu tiempo</h4>
+          <p>Tienes 150 minutos para 22 preguntas ≈ 7 minutos por pregunta. No te quedes mucho tiempo en una sola.</p>
+        </div>
+      </div>
+      <div class="consejo-card">
+        <div class="consejo-icon">🖱️</div>
+        <div>
+          <h4>No uses el botón "Atrás" del navegador</h4>
+          <p>Equivale a recargar la página. Usa solo los botones de navegación del examen.</p>
+        </div>
+      </div>
+      <div class="consejo-card">
+        <div class="consejo-icon">💬</div>
+        <div>
+          <h4>Ante cualquier problema</h4>
+          <p>Informa inmediatamente al docente. No intentes resolver el problema recargando la página.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── NOTA FINAL ────────────────────────────── -->
+  <div class="nota-final-box">
+    <h3>🎓 ¡Éxito en tu parcial!</h3>
+    <p>
+      Recuerda: el sistema de seguridad existe para garantizar la equidad del examen.<br/>
+      Si cumples las reglas, <strong>el sistema nunca te molestará</strong>.<br/><br/>
+      El enlace del examen real será compartido por el docente <strong>el día y la hora indicados</strong>.
+    </p>
+  </div>
+
+</div>
+
+<!-- ════════════════════════════════════════════════
+     MODALES DE SIMULACIÓN
+     ════════════════════════════════════════════════ -->
+
+<!-- Warning 1ª vez -->
+<div id="modal-warning-1" class="modal-overlay" onclick="cerrarSiOverlay(event,this)">
+  <div class="modal-box modal-warning">
+    <div class="demo-label">⚠ SIMULACIÓN – NO ES EL EXAMEN REAL</div>
+    <div class="m-icon">⚠️</div>
+    <h2>Advertencia de Seguridad</h2>
+    <p>Saliste de la ventana del examen. Esta es la advertencia <strong>1 de 2</strong>.<br/><br/>
+       Si vuelves a salir o cambias de pestaña, el examen será <strong>anulado automáticamente</strong>.</p>
+    <button class="btn-cerrar-modal naranja" onclick="cerrarModal('modal-warning-1')">Entendido</button>
+  </div>
+</div>
+
+<!-- Anulado: cambio de pestaña -->
+<div id="modal-anulado-tab" class="modal-overlay" onclick="cerrarSiOverlay(event,this)">
+  <div class="modal-box modal-anulado">
+    <div class="demo-label">⚠ SIMULACIÓN – NO ES EL EXAMEN REAL</div>
+    <div class="m-icon">🚫</div>
+    <h2>EXAMEN ANULADO</h2>
+    <p>Abandonaste la ventana del examen 2 veces. Examen anulado automáticamente.</p>
+    <div class="m-detail">
+      <strong>Estudiante:</strong> Tu Nombre Aquí<br/>
+      <strong>Código:</strong> XXXXXXXX<br/>
+      <strong>Momento:</strong> 19/3/2026, 10:34:22 a.m.
+    </div>
+    <p class="m-footer">Comuníquese con su docente para mayor información.</p>
+    <br/>
+    <button class="btn-cerrar-modal gris" onclick="cerrarModal('modal-anulado-tab')" style="margin-top:8px">Cerrar simulación</button>
+  </div>
+</div>
+
+<!-- Anulado: recarga -->
+<div id="modal-anulado-recarga" class="modal-overlay" onclick="cerrarSiOverlay(event,this)">
+  <div class="modal-box modal-anulado">
+    <div class="demo-label">⚠ SIMULACIÓN – NO ES EL EXAMEN REAL</div>
+    <div class="m-icon">🚫</div>
+    <h2>EXAMEN ANULADO</h2>
+    <p>Recargaste la página durante el examen.</p>
+    <div class="m-detail">
+      <strong>Estudiante:</strong> Tu Nombre Aquí<br/>
+      <strong>Código:</strong> XXXXXXXX<br/>
+      <strong>Momento:</strong> 19/3/2026, 10:51:05 a.m.
+    </div>
+    <p class="m-footer">Comuníquese con su docente para mayor información.</p>
+    <br/>
+    <button class="btn-cerrar-modal gris" onclick="cerrarModal('modal-anulado-recarga')" style="margin-top:8px">Cerrar simulación</button>
+  </div>
+</div>
+
+<!-- Anulado: split screen -->
+<div id="modal-anulado-split" class="modal-overlay" onclick="cerrarSiOverlay(event,this)">
+  <div class="modal-box modal-anulado">
+    <div class="demo-label">⚠ SIMULACIÓN – NO ES EL EXAMEN REAL</div>
+    <div class="m-icon">🚫</div>
+    <h2>EXAMEN ANULADO</h2>
+    <p>Dividiste la pantalla o redujiste la ventana del examen. Examen anulado.</p>
+    <div class="m-detail">
+      <strong>Estudiante:</strong> Tu Nombre Aquí<br/>
+      <strong>Código:</strong> XXXXXXXX<br/>
+      <strong>Momento:</strong> 19/3/2026, 11:02:18 a.m.
+    </div>
+    <p class="m-footer">Comuníquese con su docente para mayor información.</p>
+    <br/>
+    <button class="btn-cerrar-modal gris" onclick="cerrarModal('modal-anulado-split')" style="margin-top:8px">Cerrar simulación</button>
+  </div>
+</div>
+
+<!-- Bloqueado -->
+<div id="modal-bloqueado" class="modal-overlay" onclick="cerrarSiOverlay(event,this)">
+  <div class="modal-box modal-bloqueado">
+    <div class="demo-label">⚠ SIMULACIÓN – NO ES EL EXAMEN REAL</div>
+    <div class="m-icon" style="font-size:56px;margin-bottom:12px">🔒</div>
+    <h2>ACCESO BLOQUEADO</h2>
+    <p>Este código estudiantil ya presentó el examen. No es posible volver a intentarlo.</p>
+    <div style="background:rgba(231,76,60,0.1);border-radius:8px;padding:12px;color:#f1948a;font-size:0.85rem;margin-bottom:20px">
+      Código registrado: XXXXXXXX
+    </div>
+    <button class="btn-cerrar-modal gris" onclick="cerrarModal('modal-bloqueado')">Cerrar simulación</button>
+  </div>
+</div>
+
+<!-- Resultados -->
+<div id="modal-resultados" class="modal-overlay" onclick="cerrarSiOverlay(event,this)">
+  <div class="modal-box modal-resultados">
+    <div class="demo-label">⚠ SIMULACIÓN – NO ES EL EXAMEN REAL</div>
+    <h2>🎓 Examen Finalizado</h2>
+    <p style="color:var(--gris);font-size:0.82rem;margin-bottom:16px">Procesos Industriales 1 – Semestre 2025-2</p>
+    <div style="background:#d5f5e3;border-radius:10px;padding:16px 24px;margin-bottom:16px;display:inline-block">
+      <span class="nota-demo">3.8</span>
+      <span style="font-size:1.5rem;color:var(--gris)"> / 5.0</span>
+    </div>
+    <div style="display:inline-block;background:#d5f5e3;color:var(--verde);font-weight:700;padding:5px 18px;border-radius:20px;margin-bottom:16px;margin-left:8px">✓ APROBADO</div>
+    <div class="desglose-demo">
+      <div class="df"><span>Fase I – Gas Natural</span><span>0.80 / 1.00</span></div>
+      <div class="df"><span>Fase II – Petróleo</span><span>0.80 / 1.00</span></div>
+      <div class="df"><span>Fase III – Procesos</span><span>0.80 / 1.00</span></div>
+      <div class="df"><span>Fase IV – Renovables</span><span>0.50 / 0.75</span></div>
+      <div class="df" style="font-weight:700"><span>Fase V – Explotación</span><span style="color:var(--verde)">0.90 / 1.25</span></div>
+    </div>
+    <p style="color:var(--verde);font-size:0.8rem;margin-top:12px;font-weight:600">✓ Resultados enviados automáticamente al docente</p>
+    <br/>
+    <button class="btn-cerrar-modal" onclick="cerrarModal('modal-resultados')">Cerrar simulación</button>
+  </div>
+</div>
+
+<script>
+  function abrirModal(id) {
+    document.getElementById(id).classList.add('visible');
+  }
+
+  function cerrarModal(id) {
+    document.getElementById(id).classList.remove('visible');
+  }
+
+  function cerrarSiOverlay(event, overlay) {
+    if (event.target === overlay) overlay.classList.remove('visible');
+  }
+
+  // Cerrar con Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-overlay.visible').forEach(m => m.classList.remove('visible'));
+    }
+  });
+</script>
+
+</body>
+</html>

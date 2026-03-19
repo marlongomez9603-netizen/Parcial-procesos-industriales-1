@@ -12,7 +12,7 @@ const GoogleSheets = (() => {
 
   // ── ⚙ CONFIGURA ESTA URL ────────────────────────────────
   // Reemplaza con la URL de tu Google Apps Script Web App desplegado
-  const WEBAPP_URL = 'https://script.google.com/macros/s/TU_DEPLOYMENT_ID_AQUI/exec';
+  const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbx4vjkUGEW5hY2u_eKmhFq9BUvcApPxhwnBu6RH7vRm_LtW9cvDokIJMwmS97ot-5jk/exec';
   // ────────────────────────────────────────────────────────
 
   const MAX_REINTENTOS = 2;
