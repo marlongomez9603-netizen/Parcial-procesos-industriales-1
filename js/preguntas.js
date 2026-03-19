@@ -276,16 +276,16 @@ const PREGUNTAS = {
   15: {
     id: 15,
     fase: 3,
-    enunciado: "Un pozo petrolero tiene presión de yacimiento insuficiente para llevar el crudo naturalmente hasta la superficie. El crudo es viscoso (18° API) y el GOR (relación gas-crudo) es muy bajo. ¿Cuál sistema de levantamiento artificial es el más indicado?",
+    enunciado: "Un pozo petrolero que inicialmente producía crudo por flujo natural deja de hacerlo después de varios años porque la presión del yacimiento ha disminuido. ¿Cuál es la función principal de los sistemas de levantamiento artificial en esta situación?",
     tipo: "opcion_multiple",
     opciones: [
-      { id: "a", texto: "Levantamiento por gas (gas lift) – Inyecta gas en la sarta para aligerar la columna de fluido" },
-      { id: "b", texto: "Bomba electrosumergible (BES/ESP) – Alta capacidad volumétrica, ideal para crudos viscosos con bajo GOR" },
-      { id: "c", texto: "Bomba de cavidades progresivas (BCP/PCP) – Diseñada para crudos viscosos, sólidos en suspensión y bajo GOR" },
-      { id: "d", texto: "Pistón viajero (plunger lift) – Efectivo en pozos de bajo caudal con alto GOR y poca viscosidad" }
+      { id: "a", texto: "Aumentar la presión del yacimiento inyectando fluidos desde la superficie" },
+      { id: "b", texto: "Proporcionar energía adicional para llevar el crudo desde el fondo del pozo hasta la superficie cuando la presión natural ya no es suficiente" },
+      { id: "c", texto: "Calentar el crudo en el fondo del pozo para reducir su viscosidad y hacerlo fluir más rápido" },
+      { id: "d", texto: "Separar el gas, el agua y el petróleo directamente dentro del pozo antes de llevarlos a superficie" }
     ],
-    respuestaCorrecta: "c",
-    explicacion: "La Bomba de Cavidades Progresivas (BCP o PCP) es la más indicada para crudos viscosos y pesados con bajo GOR, ya que maneja fluidos de alta viscosidad sin degradarlos y tolera la presencia de sólidos en suspensión. La BES es buena pero más sensible a la viscosidad y al GOR. El gas lift requiere gas disponible. El plunger lift requiere alto GOR y baja viscosidad."
+    respuestaCorrecta: "b",
+    explicacion: "Los sistemas de levantamiento artificial (gas lift, bombeo mecánico, BES, BCP, entre otros) tienen como función principal suministrar energía adicional al fluido para transportarlo desde el fondo del pozo hasta la superficie, cuando la presión natural del yacimiento ya no es suficiente para hacerlo por sí sola. No aumentan la presión del yacimiento (eso es inyección/EOR), ni separan fases (eso lo hace el separador en superficie)."
   },
 
   // ======================================================
