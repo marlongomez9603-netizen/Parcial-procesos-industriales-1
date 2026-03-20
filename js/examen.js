@@ -73,7 +73,7 @@
 
   // ── Banco de preguntas activo (se asigna según grupo) ────
   let _preguntas = PREGUNTAS; // por defecto versión A
-  const TOTAL_PREGUNTAS = Object.keys(PREGUNTAS).length; // 22
+  const TOTAL_PREGUNTAS = Object.keys(PREGUNTAS).length; // 25
 
   // ── Inicialización ────────────────────────────────────────
   function init() {
