@@ -71,7 +71,8 @@
     tiempoRestante: TIEMPO_EXAMEN_SEG,
   };
 
-  // Total de preguntas
+  // ── Banco de preguntas activo (se asigna según grupo) ────
+  let _preguntas = PREGUNTAS; // por defecto versión A
   const TOTAL_PREGUNTAS = Object.keys(PREGUNTAS).length; // 22
 
   // ── Inicialización ────────────────────────────────────────
@@ -126,6 +127,10 @@
     Estado.grupo      = grupo;
     Estado.horaInicio = new Date();
 
+    // Seleccionar banco de preguntas según grupo
+    // Grupo A y C → Versión A (Nocturnos)  |  Grupo B → Versión B (Diurnos)
+    _preguntas = (grupo === 'B') ? PREGUNTAS_B : PREGUNTAS;
+
     Antifraude.activar(codigo);
     iniciarExamen();
   }
@@ -174,7 +179,7 @@
     Estado.pregActual = indice;
 
     const pregId   = pregsIds[indice];
-    const pregunta = PREGUNTAS[pregId];
+    const pregunta = _preguntas[pregId];
     const numGlobal = calcularNumeroGlobal(Estado.faseActual, indice);
 
     UI.pregNumero.textContent = `Pregunta ${numGlobal} de ${TOTAL_PREGUNTAS}  ·  Fase ${Estado.faseActual} – Pregunta ${indice + 1} de ${pregsIds.length}`;
@@ -316,7 +321,7 @@
     Antifraude.marcarCompletado();
     Antifraude.desactivar();
 
-    const { notaTotal, notasPorFase } = calcularNotaFinal(Estado.respuestas);
+    const { notaTotal, notasPorFase } = calcularNotaFinal(Estado.respuestas, _preguntas);
 
     const tiempoMs  = new Date() - Estado.horaInicio;
     const tiempoMin = Math.floor(tiempoMs / 60000);

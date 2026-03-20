@@ -408,15 +408,17 @@ OPCIÓN A – Planta Solar FV (10 MW):\n• Inversión: USD 8 millones\n• LCOE
 };
 
 // Función utilitaria: obtener preguntas de una fase
-function obtenerPreguntasFase(faseId) {
+function obtenerPreguntasFase(faseId, banco) {
+  banco = banco || PREGUNTAS;
   const fase = FASES.find(f => f.id === faseId);
   if (!fase) return [];
-  return fase.preguntas.map(id => PREGUNTAS[id]);
+  return fase.preguntas.map(id => banco[id]);
 }
 
 // Función: calcular puntaje de una respuesta
-function calcularPuntaje(preguntaId, respuestaEstudiante) {
-  const pregunta = PREGUNTAS[preguntaId];
+function calcularPuntaje(preguntaId, respuestaEstudiante, banco) {
+  banco = banco || PREGUNTAS;
+  const pregunta = banco[preguntaId];
   if (!pregunta) return 0;
   const fase = FASES.find(f => f.id === pregunta.fase);
   if (!fase) return 0;
@@ -424,14 +426,15 @@ function calcularPuntaje(preguntaId, respuestaEstudiante) {
 }
 
 // Función: calcular nota final
-function calcularNotaFinal(respuestas) {
+function calcularNotaFinal(respuestas, banco) {
+  banco = banco || PREGUNTAS;
   let notaTotal = 0;
   const notasPorFase = {};
 
   FASES.forEach(fase => {
     let notaFase = 0;
     fase.preguntas.forEach(id => {
-      notaFase += calcularPuntaje(id, respuestas[id]);
+      notaFase += calcularPuntaje(id, respuestas[id], banco);
     });
     notasPorFase[fase.id] = parseFloat(notaFase.toFixed(4));
     notaTotal += notaFase;
@@ -442,3 +445,4 @@ function calcularNotaFinal(respuestas) {
     notasPorFase
   };
 }
+
