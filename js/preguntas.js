@@ -1,374 +1,402 @@
 // ============================================================
 // BANCO DE PREGUNTAS – VERSIÓN A (Grupo A)
-// 25 preguntas × 0.20 pts = 5.0 puntos | 5 fases × 5 preguntas
-// Preguntas intercaladas: mezcla de pool A y pool B
+// 25 preguntas × 0.20 pts = 5.0 puntos
+// Patrón de intercalación por fase: A,A,B,B,A
 // ============================================================
 
 const FASES = [
-  { id: 1, titulo: "Fase I: Cadena de Valor del Gas Natural",
-    descripcion: "Exploración, producción, transporte, procesamiento y distribución del gas natural.",
-    puntosPorPregunta: 0.20, preguntas: [1, 2, 3, 4, 5] },
-  { id: 2, titulo: "Fase II: Cadena de Valor del Petróleo",
-    descripcion: "Upstream, midstream, downstream, refinación y derivados del crudo.",
-    puntosPorPregunta: 0.20, preguntas: [6, 7, 8, 9, 10] },
-  { id: 3, titulo: "Fase III: Procesos Técnicos con Apoyo Gráfico",
-    descripcion: "Análisis de diagramas de perforación, separación trifásica y exploración sísmica.",
-    puntosPorPregunta: 0.20, preguntas: [11, 12, 13, 14, 15] },
-  { id: 4, titulo: "Fase IV: Toma de Decisiones – Energías Renovables",
-    descripcion: "Escenarios reales para seleccionar, evaluar e implementar proyectos de energía renovable.",
-    puntosPorPregunta: 0.20, preguntas: [16, 17, 18, 19, 20] },
-  { id: 5, titulo: "Fase V: Toma de Decisiones – Explotación Petrolera",
-    descripcion: "Escenarios técnicos para decidir viabilidad, método de recuperación y cumplimiento ambiental.",
-    puntosPorPregunta: 0.20, preguntas: [21, 22, 23, 24, 25] }
+  { id:1, titulo:"Fase I: Cadena de Valor del Gas Natural",
+    descripcion:"Exploración, producción, transporte, procesamiento y distribución del gas natural.",
+    puntosPorPregunta:0.20, preguntas:[1,2,3,4,5] },
+  { id:2, titulo:"Fase II: Cadena de Valor del Petróleo",
+    descripcion:"Upstream, midstream, downstream, refinación y derivados del crudo.",
+    puntosPorPregunta:0.20, preguntas:[6,7,8,9,10] },
+  { id:3, titulo:"Fase III: Procesos Técnicos con Apoyo Gráfico",
+    descripcion:"Análisis de diagramas de perforación, separación trifásica y exploración sísmica.",
+    puntosPorPregunta:0.20, preguntas:[11,12,13,14,15] },
+  { id:4, titulo:"Fase IV: Toma de Decisiones – Energías Renovables",
+    descripcion:"Escenarios reales para seleccionar, evaluar e implementar proyectos de energía renovable.",
+    puntosPorPregunta:0.20, preguntas:[16,17,18,19,20] },
+  { id:5, titulo:"Fase V: Toma de Decisiones – Explotación Petrolera",
+    descripcion:"Escenarios técnicos para decidir viabilidad, método de recuperación y cumplimiento ambiental.",
+    puntosPorPregunta:0.20, preguntas:[21,22,23,24,25] }
 ];
 
 const PREGUNTAS = {
 
-  // ══════════════ FASE 1 — GAS NATURAL ══════════════
+  // ═══ FASE 1 — GAS NATURAL ═══
+  // Patrón: A, A, B, B, A
 
+  // [A] Pregunta 1
   1: { id:1, fase:1,
-    enunciado: "¿Cuál es el orden correcto de las etapas en la cadena de valor del gas natural, desde su origen hasta el usuario final?",
-    tipo: "opcion_multiple",
+    enunciado: "¿Cuál es el orden correcto de las etapas en la cadena de valor del gas natural?",
+    tipo:"opcion_multiple",
     opciones: [
       { id:"a", texto:"Exploración → Producción → Tratamiento → Transporte → Distribución → Comercialización" },
       { id:"b", texto:"Producción → Exploración → Transporte → Tratamiento → Distribución → Comercialización" },
       { id:"c", texto:"Exploración → Transporte → Producción → Distribución → Tratamiento → Comercialización" },
       { id:"d", texto:"Tratamiento → Exploración → Producción → Transporte → Comercialización → Distribución" }
     ],
-    respuestaCorrecta: "a",
-    explicacion: "La cadena inicia con exploración geológica, producción, tratamiento (deshidratación, endulzamiento), transporte por gasoductos, distribución local y comercialización al usuario final."
+    respuestaCorrecta:"a",
+    explicacion:"La cadena inicia con exploración, producción, tratamiento (deshidratación, endulzamiento), transporte por gasoductos, distribución local y comercialización."
   },
 
+  // [A] Pregunta 2
   2: { id:2, fase:1,
-    enunciado: "Una planta de procesamiento de gas natural recibe gas crudo saturado con vapor de agua. Si este gas se transporta sin tratar por el gasoducto, ¿cuál es el principal riesgo operativo?",
-    tipo: "opcion_multiple",
-    opciones: [
-      { id:"a", texto:"El gas se licúa completamente dentro de la tubería" },
-      { id:"b", texto:"Se forman hidratos (cristales sólidos similares al hielo) que pueden bloquear la tubería y las válvulas" },
-      { id:"c", texto:"El vapor de agua reacciona con el metano generando una explosión espontánea" },
-      { id:"d", texto:"La presión del gasoducto se duplica por la expansión del vapor" }
-    ],
-    respuestaCorrecta: "b",
-    explicacion: "Los hidratos de gas son cristales sólidos que se forman cuando el gas natural húmedo se enfría a alta presión. Pueden bloquear tuberías, válvulas y equipos. Por eso el gas se deshidrata (con TEG o tamices moleculares) antes de transportarse."
-  },
-
-  3: { id:3, fase:1,
-    enunciado: "En una planta de procesamiento de gas natural, el gas crudo contiene 3% de H₂S y 8% de CO₂, lo que lo hace corrosivo y tóxico. ¿Cuál proceso industrial se aplica para eliminar estos componentes ácidos?",
-    tipo: "opcion_multiple",
+    enunciado: "El gas crudo contiene 3% de H₂S y 8% de CO₂, haciéndolo corrosivo y tóxico. ¿Cuál proceso elimina estos componentes ácidos?",
+    tipo:"opcion_multiple",
     opciones: [
       { id:"a", texto:"Deshidratación con glicol (TEG)" },
       { id:"b", texto:"Endulzamiento con aminas (MEA/DEA/MDEA)" },
       { id:"c", texto:"Proceso criogénico (turboexpansión)" },
       { id:"d", texto:"Adsorción con tamices moleculares" }
     ],
-    respuestaCorrecta: "b",
-    explicacion: "El endulzamiento elimina gases ácidos (H₂S y CO₂) mediante absorción química con aminas. El gas resultante se llama 'gas dulce'."
+    respuestaCorrecta:"b",
+    explicacion:"El endulzamiento elimina gases ácidos (H₂S y CO₂) con aminas. El resultado es 'gas dulce'."
   },
 
+  // [B] Pregunta 3
+  3: { id:3, fase:1,
+    enunciado: "El gas natural crudo contiene una mezcla de hidrocarburos y contaminantes. ¿Cuál es la composición principal del gas natural comercial después de ser procesado?",
+    tipo:"opcion_multiple",
+    opciones: [
+      { id:"a", texto:"Principalmente propano y butano con trazas de metano" },
+      { id:"b", texto:"Una mezcla equitativa de metano, etano, propano y butano" },
+      { id:"c", texto:"Principalmente metano (CH₄), con pequeñas cantidades de etano y propano" },
+      { id:"d", texto:"Principalmente hidrógeno y nitrógeno con algo de metano" }
+    ],
+    respuestaCorrecta:"c",
+    explicacion:"El gas natural comercial (gas seco) está compuesto principalmente por metano (85-95%)."
+  },
+
+  // [B] Pregunta 4
   4: { id:4, fase:1,
-    enunciado: "Una planta de fraccionamiento de líquidos del gas natural (LGN) recibe una mezcla de hidrocarburos líquidos. ¿Cuál es la función principal de esta planta dentro de la cadena de valor?",
-    tipo: "opcion_multiple",
+    enunciado: "Una planta recibe gas crudo saturado con vapor de agua. Si se transporta sin tratar por el gasoducto, ¿cuál es el principal riesgo operativo?",
+    tipo:"opcion_multiple",
     opciones: [
-      { id:"a", texto:"Comprimir el gas seco para inyectarlo en gasoductos de alta presión" },
-      { id:"b", texto:"Separar la mezcla de LGN en fracciones individuales: etano, propano, butano y gasolina natural" },
-      { id:"c", texto:"Convertir el gas natural en metanol líquido para uso como combustible vehicular" },
-      { id:"d", texto:"Eliminar el nitrógeno y el helio presentes en el gas crudo de pozo" }
+      { id:"a", texto:"El gas se licúa completamente dentro de la tubería" },
+      { id:"b", texto:"Se forman hidratos (cristales sólidos) que pueden bloquear la tubería y las válvulas" },
+      { id:"c", texto:"El vapor de agua reacciona con el metano generando una explosión" },
+      { id:"d", texto:"La presión del gasoducto se duplica por la expansión del vapor" }
     ],
-    respuestaCorrecta: "b",
-    explicacion: "La planta de fraccionamiento separa los LGN en componentes comercializables mediante destilación fraccionada a diferentes temperaturas y presiones."
+    respuestaCorrecta:"b",
+    explicacion:"Los hidratos de gas son cristales sólidos que bloquean tuberías y equipos. Se previene con deshidratación (TEG o tamices)."
   },
 
+  // [A] Pregunta 5
   5: { id:5, fase:1,
-    enunciado: "En Colombia, el gas natural tiene múltiples usos en diferentes sectores. ¿Cuál de las siguientes aplicaciones del gas natural es la que representa el MAYOR porcentaje de consumo a nivel nacional?",
-    tipo: "opcion_multiple",
+    enunciado: "Una planta de fraccionamiento de líquidos del gas natural (LGN) recibe una mezcla de hidrocarburos líquidos. ¿Cuál es su función principal?",
+    tipo:"opcion_multiple",
     opciones: [
-      { id:"a", texto:"Como combustible vehicular (GNV) en el transporte público" },
-      { id:"b", texto:"Como materia prima para fabricar fertilizantes y productos químicos" },
-      { id:"c", texto:"Generación de energía eléctrica en centrales termoeléctricas" },
-      { id:"d", texto:"Uso recreativo en calefacción de piscinas y parques acuáticos" }
+      { id:"a", texto:"Comprimir el gas seco para gasoductos de alta presión" },
+      { id:"b", texto:"Separar la mezcla de LGN en fracciones: etano, propano, butano y gasolina natural" },
+      { id:"c", texto:"Convertir el gas natural en metanol líquido" },
+      { id:"d", texto:"Eliminar el nitrógeno y el helio del gas crudo" }
     ],
-    respuestaCorrecta: "c",
-    explicacion: "En Colombia, el mayor consumo de gas natural corresponde a la generación termoeléctrica, especialmente como respaldo cuando los embalses tienen bajos niveles."
+    respuestaCorrecta:"b",
+    explicacion:"La planta de fraccionamiento separa LGN en componentes comercializables mediante destilación fraccionada."
   },
 
-  // ══════════════ FASE 2 — PETRÓLEO ══════════════
+  // ═══ FASE 2 — PETRÓLEO ═══
+  // Patrón: A, A, B, B, A
 
+  // [A] Pregunta 6
   6: { id:6, fase:2,
-    enunciado: "Una multinacional petrolera realiza exploración sísmica, perforación de pozos y producción de crudo. También opera un oleoducto y una refinería que produce gasolina y diésel. ¿Cómo se clasifican estas actividades?",
-    tipo: "opcion_multiple",
+    enunciado: "Una multinacional realiza exploración y producción de crudo, opera un oleoducto y una refinería. ¿Cómo se clasifican estas actividades?",
+    tipo:"opcion_multiple",
     opciones: [
-      { id:"a", texto:"Exploración y perforación = Upstream; Oleoducto = Midstream; Refinería = Downstream" },
-      { id:"b", texto:"Exploración = Upstream; Perforación/producción = Midstream; Refinería/oleoducto = Downstream" },
-      { id:"c", texto:"Todas las actividades de extracción = Upstream; Todo lo demás = Downstream" },
-      { id:"d", texto:"Exploración = Midstream; Producción/refinería = Upstream; Comercialización = Downstream" }
+      { id:"a", texto:"Exploración y producción = Upstream; Oleoducto = Midstream; Refinería = Downstream" },
+      { id:"b", texto:"Exploración = Upstream; Perforación = Midstream; Refinería = Downstream" },
+      { id:"c", texto:"Todo extracción = Upstream; Todo lo demás = Downstream" },
+      { id:"d", texto:"Exploración = Midstream; Producción = Upstream; Comercialización = Downstream" }
     ],
-    respuestaCorrecta: "a",
-    explicacion: "Upstream = exploración y producción. Midstream = transporte y almacenamiento. Downstream = refinación, distribución y venta."
+    respuestaCorrecta:"a",
+    explicacion:"Upstream = E&P. Midstream = transporte y almacenamiento. Downstream = refinación y venta."
   },
 
+  // [A] Pregunta 7
   7: { id:7, fase:2,
-    enunciado: "En un laboratorio, se miden tres muestras de crudo con gravedades API de 12°, 28° y 42° respectivamente. ¿Cómo se clasifican y cuál tiene mayor valor comercial?",
-    tipo: "opcion_multiple",
+    enunciado: "Tres muestras de crudo miden 12°, 28° y 42° API. ¿Cómo se clasifican y cuál tiene mayor valor?",
+    tipo:"opcion_multiple",
     opciones: [
-      { id:"a", texto:"12° API = Liviano (mayor valor); 28° = Mediano; 42° = Pesado (menor valor)" },
-      { id:"b", texto:"12° API = Pesado (menor valor); 28° = Mediano; 42° = Liviano (mayor valor)" },
-      { id:"c", texto:"Los tres son crudos medianos; la gravedad API no determina el valor comercial" },
-      { id:"d", texto:"12° = Extra pesado; 28° = Liviano; 42° = Condensado de gas" }
+      { id:"a", texto:"12° = Liviano (mayor valor); 28° = Mediano; 42° = Pesado (menor valor)" },
+      { id:"b", texto:"12° = Pesado (menor valor); 28° = Mediano; 42° = Liviano (mayor valor)" },
+      { id:"c", texto:"Los tres son medianos; API no determina valor" },
+      { id:"d", texto:"12° = Extra pesado; 28° = Liviano; 42° = Condensado" }
     ],
-    respuestaCorrecta: "b",
-    explicacion: "Mayor API = más ligero = mayor rendimiento en productos valiosos. API < 20° = pesado; 20-31° = mediano; > 31° = liviano."
+    respuestaCorrecta:"b",
+    explicacion:"Mayor API = más ligero = mayor valor comercial. API < 20° pesado; 20-31° mediano; > 31° liviano."
   },
 
+  // [B] Pregunta 8
   8: { id:8, fase:2,
-    enunciado: "En una refinería, el crudo entra a la torre de destilación atmosférica y se separa en varias fracciones. Ordene las fracciones desde la que sale por la parte MÁS ALTA de la torre hasta la que queda en el FONDO:",
-    tipo: "opcion_multiple",
+    enunciado: "En una refinería, el crudo entra a la torre de destilación atmosférica y se separa en fracciones. Ordene desde la parte MÁS ALTA de la torre hasta el FONDO:",
+    tipo:"opcion_multiple",
     opciones: [
-      { id:"a", texto:"Fondo: Gases ligeros → Medio: Diésel → Arriba: Residuo pesado (asfalto)" },
-      { id:"b", texto:"Arriba: Residuo pesado → Medio: Gasolina → Fondo: Gases ligeros (GLP)" },
+      { id:"a", texto:"Fondo: Gases ligeros → Medio: Diésel → Arriba: Residuo pesado" },
+      { id:"b", texto:"Arriba: Residuo pesado → Medio: Gasolina → Fondo: Gases ligeros" },
       { id:"c", texto:"Arriba: Gases ligeros (GLP) → Gasolina → Queroseno → Diésel → Fondo: Residuo pesado" },
       { id:"d", texto:"Arriba: Diésel → Medio: Queroseno → Fondo: Gasolina y gases" }
     ],
-    respuestaCorrecta: "c",
-    explicacion: "Los componentes más livianos (gases, GLP) salen por arriba. Luego bajan: gasolina, queroseno, diésel, y en el fondo queda el residuo pesado."
+    respuestaCorrecta:"c",
+    explicacion:"Los más livianos (gases, GLP) salen por arriba. Luego: gasolina, queroseno, diésel. Fondo: residuo pesado (asfalto)."
   },
 
+  // [B] Pregunta 9
   9: { id:9, fase:2,
-    enunciado: "La refinería necesita aumentar la producción de gasolina de alto octano a partir de fracciones pesadas como el gasóleo de vacío. ¿Qué proceso de conversión catalítica se aplica?",
-    tipo: "opcion_multiple",
+    enunciado: "La refinería necesita producir más gasolina de la que obtiene por destilación directa. ¿Cuál proceso permite TRANSFORMAR fracciones pesadas en más livianas?",
+    tipo:"opcion_multiple",
     opciones: [
-      { id:"a", texto:"Reformación catalítica" },
-      { id:"b", texto:"Cracking catalítico fluido (FCC)" },
-      { id:"c", texto:"Alquilación" },
-      { id:"d", texto:"Hidrodesulfuración (HDS)" }
+      { id:"a", texto:"Destilación al vacío" },
+      { id:"b", texto:"Mezcla con solventes (blending)" },
+      { id:"c", texto:"Cracking (rompimiento de moléculas grandes en más pequeñas)" },
+      { id:"d", texto:"Filtración molecular" }
     ],
-    respuestaCorrecta: "b",
-    explicacion: "El FCC rompe moléculas pesadas en más livianas y valiosas usando catalizadores zeolíticos a ~500°C."
+    respuestaCorrecta:"c",
+    explicacion:"El cracking rompe moléculas pesadas en livianas y valiosas. La destilación solo separa, no transforma."
   },
 
+  // [A] Pregunta 10
   10: { id:10, fase:2,
-    enunciado: "Un barril de petróleo (159 litros) se refina y produce múltiples derivados. ¿Cuál de los siguientes productos NO se obtiene del petróleo?",
-    tipo: "opcion_multiple",
+    enunciado: "La torre de destilación atmosférica separa el petróleo en derivados. ¿Qué principio físico-químico permite la separación?",
+    tipo:"opcion_multiple",
     opciones: [
-      { id:"a", texto:"Gasolina para vehículos" },
-      { id:"b", texto:"Asfalto para carreteras" },
-      { id:"c", texto:"Cemento Portland para construcción" },
-      { id:"d", texto:"Plásticos y fibras sintéticas (a partir de nafta petroquímica)" }
+      { id:"a", texto:"Diferencias en punto de ebullición de los hidrocarburos" },
+      { id:"b", texto:"Diferencias en densidad" },
+      { id:"c", texto:"Diferencias en solubilidad" },
+      { id:"d", texto:"Diferencias en tamaño molecular" }
     ],
-    respuestaCorrecta: "c",
-    explicacion: "El cemento Portland se fabrica de caliza, arcilla y yeso, NO del petróleo."
+    respuestaCorrecta:"a",
+    explicacion:"La destilación fraccionada aprovecha diferencias de puntos de ebullición. Más livianos suben, más pesados quedan abajo."
   },
 
-  // ══════════════ FASE 3 — PROCESOS TÉCNICOS ══════════════
+  // ═══ FASE 3 — PROCESOS TÉCNICOS ═══
+  // Patrón: A, A, B, B, A
 
+  // [A] Pregunta 11
   11: { id:11, fase:3,
-    enunciado: "Observe el diagrama de una torre de perforación rotaria. El sistema que circula el fluido de perforación desde la superficie hasta el fondo del pozo y de regreso, manteniendo la presión y limpiando los ripios, se llama:",
-    tipo: "opcion_multiple", grafico: "perforacion",
+    enunciado: "Observe el diagrama de la torre de perforación. El sistema que circula fluido desde la superficie al fondo del pozo, manteniendo presión y limpiando ripios, se llama:",
+    tipo:"opcion_multiple", grafico:"perforacion",
     opciones: [
-      { id:"a", texto:"Sistema de potencia (motores y generadores eléctricos de la plataforma)" },
-      { id:"b", texto:"Sistema de circulación de lodo (bombas, líneas de descarga, BOP y tanques de lodo)" },
+      { id:"a", texto:"Sistema de potencia (motores y generadores)" },
+      { id:"b", texto:"Sistema de circulación de lodo (bombas, líneas de descarga, BOP y tanques)" },
       { id:"c", texto:"Sistema de izaje (crown block, travelling block, gancho y malacate)" },
-      { id:"d", texto:"Sistema de rotación (mesa rotaria, top drive y sarta de perforación)" }
+      { id:"d", texto:"Sistema de rotación (mesa rotaria, top drive y sarta)" }
     ],
-    respuestaCorrecta: "b",
-    explicacion: "El sistema de circulación de lodo impulsa el fluido por la sarta hasta la broca, recoge los ripios y los transporta a superficie."
+    respuestaCorrecta:"b",
+    explicacion:"El sistema de circulación de lodo impulsa el fluido por la sarta hasta la broca, recoge ripios y los transporta a superficie."
   },
 
+  // [A] Pregunta 12
   12: { id:12, fase:3,
-    enunciado: "En el diagrama del separador trifásico, el fluido que sale del pozo (mezcla de petróleo, gas y agua) debe separarse. ¿Por qué el GAS sale siempre por la parte SUPERIOR del separador?",
-    tipo: "opcion_multiple", grafico: "separador",
+    enunciado: "En el separador trifásico horizontal, la mezcla de petróleo, gas y agua se separa. ¿Cuál es el principio y orden de salida?",
+    tipo:"opcion_multiple", grafico:"separador",
     opciones: [
-      { id:"a", texto:"Porque se aplica un campo eléctrico que empuja el gas hacia arriba" },
+      { id:"a", texto:"Temperatura diferencial – Gas caliente arriba, agua tibia medio, crudo frío abajo" },
+      { id:"b", texto:"Diferencia de densidades y gravedad – Gas arriba, crudo medio, agua por el fondo" },
+      { id:"c", texto:"Presión diferencial – El de mayor presión se separa primero" },
+      { id:"d", texto:"Solubilidad – El gas se disuelve en agua, crudo flota" }
+    ],
+    respuestaCorrecta:"b",
+    explicacion:"El separador aprovecha diferencia de densidades: gas sube (más liviano), crudo queda en el medio, agua baja (más densa)."
+  },
+
+  // [B] Pregunta 13
+  13: { id:13, fase:3,
+    enunciado: "Observe el diagrama de la torre de perforación. Durante la perforación se bombea un fluido especial ('lodo'). ¿Cuáles son las funciones principales de este lodo?",
+    tipo:"opcion_multiple", grafico:"perforacion",
+    opciones: [
+      { id:"a", texto:"Solo sirve para enfriar la broca" },
+      { id:"b", texto:"Enfriar y lubricar la broca, transportar los ripios a superficie, mantener presión del pozo y estabilizar paredes" },
+      { id:"c", texto:"Disolver la roca del subsuelo químicamente" },
+      { id:"d", texto:"Generar energía eléctrica para los motores de la torre" }
+    ],
+    respuestaCorrecta:"b",
+    explicacion:"El lodo enfría/lubrica la broca, transporta ripios, controla presión hidrostática y estabiliza las paredes del pozo."
+  },
+
+  // [B] Pregunta 14
+  14: { id:14, fase:3,
+    enunciado: "En el diagrama del separador trifásico, ¿por qué el GAS sale siempre por la parte SUPERIOR del separador?",
+    tipo:"opcion_multiple", grafico:"separador",
+    opciones: [
+      { id:"a", texto:"Porque un campo eléctrico empuja el gas hacia arriba" },
       { id:"b", texto:"Porque el gas tiene menor densidad que el petróleo y el agua, y por gravedad asciende naturalmente" },
       { id:"c", texto:"Porque un ventilador interno aspira el gas hacia la salida superior" },
-      { id:"d", texto:"Porque el gas se calienta más que los líquidos y sube por convección térmica" }
+      { id:"d", texto:"Porque el gas se calienta más que los líquidos y sube por convección" }
     ],
-    respuestaCorrecta: "b",
-    explicacion: "El separador trifásico funciona por diferencia de densidades: el gas (más liviano) asciende, el petróleo queda en la capa media y el agua se deposita en el fondo."
+    respuestaCorrecta:"b",
+    explicacion:"El gas es más liviano (menor densidad). Por gravedad, asciende naturalmente sin necesidad de equipos adicionales."
   },
 
-  13: { id:13, fase:3,
-    enunciado: "Observe el diagrama de exploración sísmica. Antes de perforar un pozo exploratorio, los geólogos necesitan 'ver' lo que hay debajo del suelo. ¿Cuál técnica les permite crear una imagen del subsuelo sin excavar?",
-    tipo: "opcion_multiple", grafico: "exploracion",
-    opciones: [
-      { id:"a", texto:"Rayos X del subsuelo desde un satélite espacial" },
-      { id:"b", texto:"Sísmica de reflexión: se generan ondas en superficie que rebotan en las capas rocosas y se registran con geófonos" },
-      { id:"c", texto:"Excavación de trincheras de 100 metros de profundidad para observar directamente las rocas" },
-      { id:"d", texto:"Análisis químico del aire superficial para detectar vapores de petróleo" }
-    ],
-    respuestaCorrecta: "b",
-    explicacion: "La sísmica de reflexión genera ondas que viajan al subsuelo, rebotan en las interfaces rocosas y regresan a superficie donde son captadas por geófonos."
-  },
-
-  14: { id:14, fase:3,
-    enunciado: "Al finalizar la perforación de un pozo y confirmar la presencia de hidrocarburos, se instala en la boca del pozo un conjunto de válvulas que permite controlar el flujo. Este equipo es conocido como:",
-    tipo: "opcion_multiple",
-    opciones: [
-      { id:"a", texto:"BOP (Blow Out Preventer)" },
-      { id:"b", texto:"Árbol de navidad (Christmas Tree)" },
-      { id:"c", texto:"Separador trifásico" },
-      { id:"d", texto:"Manifold de producción" }
-    ],
-    respuestaCorrecta: "b",
-    explicacion: "El 'árbol de navidad' es el conjunto de válvulas, bridas y conexiones en la cabeza del pozo para controlar la producción."
-  },
-
+  // [A] Pregunta 15
   15: { id:15, fase:3,
-    enunciado: "Un pozo petrolero que inicialmente producía crudo por flujo natural deja de hacerlo después de varios años porque la presión del yacimiento ha disminuido. ¿Cuál es la función principal de los sistemas de levantamiento artificial?",
-    tipo: "opcion_multiple",
+    enunciado: "Observe el diagrama de exploración sísmica. ¿Cuál es el propósito de los geófonos dispuestos en superficie?",
+    tipo:"opcion_multiple", grafico:"exploracion",
     opciones: [
-      { id:"a", texto:"Aumentar la presión del yacimiento inyectando fluidos desde la superficie" },
-      { id:"b", texto:"Proporcionar energía adicional para llevar el crudo desde el fondo del pozo hasta la superficie" },
-      { id:"c", texto:"Calentar el crudo en el fondo del pozo para reducir su viscosidad" },
-      { id:"d", texto:"Separar el gas, el agua y el petróleo directamente dentro del pozo" }
+      { id:"a", texto:"Medir la temperatura del subsuelo" },
+      { id:"b", texto:"Registrar el tiempo de llegada de las ondas sísmicas reflejadas para construir un modelo del subsuelo" },
+      { id:"c", texto:"Detectar la presencia de hidrocarburos directamente" },
+      { id:"d", texto:"Medir la permeabilidad y porosidad del suelo" }
     ],
-    respuestaCorrecta: "b",
-    explicacion: "Los sistemas de levantamiento artificial suministran energía adicional al fluido para transportarlo a superficie cuando la presión natural ya no alcanza."
+    respuestaCorrecta:"b",
+    explicacion:"Los geófonos registran ondas reflejadas. El tiempo de llegada permite construir imagen sísmica 2D/3D del subsuelo."
   },
 
-  // ══════════════ FASE 4 — ENERGÍAS RENOVABLES ══════════════
+  // ═══ FASE 4 — ENERGÍAS RENOVABLES ═══
+  // Patrón: A, A, B, B, A
 
+  // [A] Pregunta 16
   16: { id:16, fase:4,
-    enunciado: `ESCENARIO DE DECISIÓN: El municipio de Uribia (La Guajira) tiene las siguientes condiciones:\n\n• Irradiación solar: 6.2 kWh/m²/día\n• Velocidad del viento: 9.5 m/s promedio a 80 m de altura\n• Precipitación: 300 mm/año (zona árida)\n• Demanda eléctrica: 15 MW\n• Conexión a red nacional: Muy limitada\n\n¿Cuál combinación de energías renovables es la más justificada?`,
-    tipo: "opcion_multiple",
+    enunciado: `ESCENARIO: Uribia (La Guajira):\n• Irradiación solar: 6.2 kWh/m²/día\n• Viento: 9.5 m/s a 80m\n• Precipitación: 300 mm/año (zona árida)\n• Demanda: 15 MW\n• Conexión a red: muy limitada\n\n¿Cuál combinación de energías renovables es la mejor?`,
+    tipo:"opcion_multiple",
     opciones: [
-      { id:"a", texto:"Solo energía hidroeléctrica – La precipitación garantiza caudal suficiente" },
+      { id:"a", texto:"Solo energía hidroeléctrica" },
       { id:"b", texto:"Combinación solar fotovoltaica + eólica con almacenamiento en baterías" },
-      { id:"c", texto:"Biomasa a partir de residuos agrícolas – La Guajira tiene alta producción de caña" },
-      { id:"d", texto:"Geotérmica – La Sierra Nevada indica actividad volcánica explotable" }
+      { id:"c", texto:"Biomasa de residuos agrícolas" },
+      { id:"d", texto:"Geotérmica" }
     ],
-    respuestaCorrecta: "b",
-    explicacion: "La Guajira tiene el mayor potencial eólico y solar de Colombia. La combinación solar+eólica con baterías es óptima para zona no interconectada."
+    respuestaCorrecta:"b",
+    explicacion:"La Guajira tiene el mayor potencial eólico y solar de Colombia. Solar+eólica+baterías es óptimo para zona no interconectada."
   },
 
+  // [A] Pregunta 17
   17: { id:17, fase:4,
-    enunciado: `ESCENARIO: El departamento del Huila quiere reemplazar una vieja central termoeléctrica a carbón (50 MW). Evalúan:\n\nOPCIÓN A – Parque solar flotante en embalse de Betania (50 MW, factor cap. 20%, solo de día)\nOPCIÓN B – Repotenciar la hidroeléctrica de Betania (+50 MW, factor cap. 55%, genera 24h)\n\n¿Cuál decisión es más estratégica?`,
-    tipo: "opcion_multiple",
+    enunciado: `ESCENARIO: Se evalúan dos proyectos para Boyacá:\n\nSolar FV 10 MW: Inversión USD 8M, LCOE $45/MWh, Factor cap. 18%\nEólica 10 MW: Inversión USD 14M, LCOE $62/MWh, Factor cap. 28%\n\n¿Cuál seleccionar?`,
+    tipo:"opcion_multiple",
     opciones: [
-      { id:"a", texto:"Solo Opción A (solar flotante), porque es 100% limpia y moderna" },
-      { id:"b", texto:"Combinar ambas: repotenciar Betania para base + solar flotante para pico diurno, eliminando la termoeléctrica" },
-      { id:"c", texto:"Solo Opción B (repotenciar hidroeléctrica), porque la solar es experimental" },
+      { id:"a", texto:"Eólica – Mayor factor de capacidad (28% vs 18%)" },
+      { id:"b", texto:"Solar – Menor inversión (USD 8M) y menor LCOE (USD 45 vs 62), más rentable" },
+      { id:"c", texto:"Ninguna – Boyacá tiene alto potencial hidráulico" },
+      { id:"d", texto:"Solar solo si no hay conexión a red" }
+    ],
+    respuestaCorrecta:"b",
+    explicacion:"Solar FV: menor LCOE y menor inversión = más rentable, menor riesgo financiero."
+  },
+
+  // [B] Pregunta 18
+  18: { id:18, fase:4,
+    enunciado: `ESCENARIO: Comunidad Wayúu en Manaure (La Guajira), sin red eléctrica:\n• 2.500 personas en rancherías dispersas\n• Irradiación: 6.0 kWh/m²/día\n• Sin ríos ni fuentes hídricas\n• Presupuesto: USD 1.5 millones\n\n¿Cuál solución energética es más adecuada?`,
+    tipo:"opcion_multiple",
+    opciones: [
+      { id:"a", texto:"Extender la red eléctrica nacional desde Riohacha (90 km)" },
+      { id:"b", texto:"Planta termoeléctrica a diésel" },
+      { id:"c", texto:"Sistemas solares FV individuales con baterías + bombeo solar comunitario" },
+      { id:"d", texto:"Pequeña central hidroeléctrica aprovechando lluvias" }
+    ],
+    respuestaCorrecta:"c",
+    explicacion:"Para comunidades dispersas sin red, los sistemas FV individuales con baterías son la solución más costo-efectiva."
+  },
+
+  // [B] Pregunta 19
+  19: { id:19, fase:4,
+    enunciado: `ESCENARIO: Huila quiere reemplazar una termoeléctrica a carbón (50 MW):\n\nOpción A – Solar flotante en embalse de Betania (50 MW, solo de día)\nOpción B – Repotenciar la hidroeléctrica de Betania (+50 MW, genera 24h)\n\n¿Decisión más estratégica?`,
+    tipo:"opcion_multiple",
+    opciones: [
+      { id:"a", texto:"Solo solar flotante, porque es 100% limpia y moderna" },
+      { id:"b", texto:"Combinar ambas: repotenciar Betania para base + solar flotante para pico diurno" },
+      { id:"c", texto:"Solo repotenciar, porque la solar es experimental" },
       { id:"d", texto:"Mantener la termoeléctrica con filtros de aire" }
     ],
-    respuestaCorrecta: "b",
-    explicacion: "La combinación es óptima: hidroeléctrica da base 24/7 y solar flotante aprovecha el embalse existente sin ocupar tierra agrícola."
+    respuestaCorrecta:"b",
+    explicacion:"Combinación óptima: hidroeléctrica da base 24/7 y solar flotante aprovecha embalse para pico diurno."
   },
 
-  18: { id:18, fase:4,
-    enunciado: `ESCENARIO ESG: Una empresa quiere instalar 50 MW de energía solar en el Cesar. La comunidad indígena Yukpa habita en la zona de influencia. La ANLA exige consulta previa. ¿Cuál es la decisión más adecuada bajo criterios ESG?`,
-    tipo: "opcion_multiple",
-    opciones: [
-      { id:"a", texto:"Avanzar sin consulta previa, la energía solar no genera impacto ambiental" },
-      { id:"b", texto:"Reubicar el proyecto en zona sin comunidades indígenas" },
-      { id:"c", texto:"Realizar consulta previa libre e informada con la comunidad Yukpa, incorporar observaciones y establecer beneficios compartidos" },
-      { id:"d", texto:"Pagar compensación económica individual a los líderes comunitarios" }
-    ],
-    respuestaCorrecta: "c",
-    explicacion: "La consulta previa es un derecho fundamental (Convenio 169 OIT, Constitución colombiana). Evadir genera riesgo legal y reputacional."
-  },
-
-  19: { id:19, fase:4,
-    enunciado: `ESCENARIO: Colombia evalúa instalar su primer parque eólico marino (offshore) frente a las costas de La Guajira. Los datos son:\n\n• Velocidad del viento a 100m: 11.2 m/s\n• Profundidad del mar: 25-40 metros\n• Capacidad propuesta: 200 MW\n• Inversión: USD 800 millones\n• LCOE estimado: USD 85/MWh\n\nComparado con eólica terrestre (LCOE USD 45/MWh), ¿cuál es la principal ventaja que justificaría la mayor inversión del proyecto offshore?`,
-    tipo: "opcion_multiple",
-    opciones: [
-      { id:"a", texto:"Los aerogeneradores marinos son más pequeños y baratos que los terrestres" },
-      { id:"b", texto:"El viento en el mar es más constante, fuerte y predecible, lo que aumenta el factor de capacidad y la generación anual de energía" },
-      { id:"c", texto:"No se necesitan permisos ambientales porque el mar no pertenece a ningún municipio" },
-      { id:"d", texto:"La sal del mar lubrica las turbinas y elimina el mantenimiento" }
-    ],
-    respuestaCorrecta: "b",
-    explicacion: "La eólica offshore tiene vientos más fuertes, constantes y sin obstáculos, logrando factores de capacidad de 40-50% vs 25-35% en tierra. Esto compensa parcialmente el mayor costo de inversión."
-  },
-
+  // [A] Pregunta 20
   20: { id:20, fase:4,
-    enunciado: `ESCENARIO REGULATORIO: Una empresa de energía solar contrata trabajadores para instalar 10.000 paneles en un terreno rural del Meta. Los trabajadores laboran bajo sol intenso, sin agua potable, sin EPP y dormidos en cambuches. ¿Qué aspecto ESG incumple?`,
-    tipo: "opcion_multiple",
+    enunciado: `ESCENARIO ESG: Proyecto de 50 MW solar en el Cesar. Comunidad indígena Yukpa habita en la zona. La ANLA exige consulta previa. ¿Decisión correcta bajo criterios ESG?`,
+    tipo:"opcion_multiple",
     opciones: [
-      { id:"a", texto:"Solo Ambiental (E), porque los paneles podrían afectar la fauna" },
-      { id:"b", texto:"Solo Gobernanza (G), porque la empresa no tiene junta directiva" },
-      { id:"c", texto:"Social (S): está vulnerando derechos laborales, salud y seguridad de trabajadores" },
-      { id:"d", texto:"Ninguno, la energía solar es limpia y cualquier proyecto renovable es ESG" }
+      { id:"a", texto:"Avanzar sin consulta previa, la solar no genera impacto ambiental" },
+      { id:"b", texto:"Reubicar en zona sin comunidades indígenas" },
+      { id:"c", texto:"Realizar consulta previa libre e informada, incorporar observaciones y beneficios compartidos" },
+      { id:"d", texto:"Pagar compensación económica a los líderes comunitarios" }
     ],
-    respuestaCorrecta: "c",
-    explicacion: "La 'S' de ESG incluye condiciones laborales dignas, salud ocupacional y seguridad industrial. Que sea energía limpia no exime de cumplir con derechos laborales."
+    respuestaCorrecta:"c",
+    explicacion:"La consulta previa es un derecho fundamental (Convenio 169 OIT). Evadir genera riesgo legal y reputacional."
   },
 
-  // ══════════════ FASE 5 — EXPLOTACIÓN PETROLERA ══════════════
+  // ═══ FASE 5 — EXPLOTACIÓN PETROLERA ═══
+  // Patrón: A, A, B, B, A
 
+  // [A] Pregunta 21
   21: { id:21, fase:5,
-    enunciado: `ESCENARIO DE VIABILIDAD: Se evalúa el "Campo Esperanza" con:\n\n• Reservas probadas: 45 MMBBL\n• Gravedad API: 27°\n• Precio WTI: USD 65/bbl\n• Costo de producción: USD 22/bbl\n• Inversión: USD 380 millones\n\n¿Cuál es la conclusión sobre la viabilidad?`,
-    tipo: "opcion_multiple",
+    enunciado: `ESCENARIO: "Campo Esperanza" en los Llanos Orientales:\n• Reservas probadas: 45 MMBBL\n• Gravedad API: 27°\n• Precio WTI: USD 65/bbl\n• Costo producción: USD 22/bbl\n• Inversión requerida: USD 380 millones\n\n¿Cuál es la conclusión sobre viabilidad?`,
+    tipo:"opcion_multiple",
     opciones: [
-      { id:"a", texto:"No viable – Las reservas de 45 MMBBL son insuficientes" },
-      { id:"b", texto:"Viable – El margen de USD 43/bbl sobre 45 MMBBL genera ~USD 1.935M, superando la inversión ampliamente" },
-      { id:"c", texto:"Viable solo si el precio WTI sube a USD 90/bbl" },
-      { id:"d", texto:"No viable – El crudo de 27° API es pesado y no tiene mercado" }
+      { id:"a", texto:"No viable – 45 MMBBL son insuficientes" },
+      { id:"b", texto:"Viable – Margen de USD 43/bbl × 45M = USD 1.935M, supera la inversión ampliamente" },
+      { id:"c", texto:"Viable solo si el WTI sube a USD 90" },
+      { id:"d", texto:"No viable – Crudo de 27° API es pesado sin mercado" }
     ],
-    respuestaCorrecta: "b",
-    explicacion: "Ingreso bruto = 45M × (65-22) = USD 1.935M. La inversión de USD 380M se recupera con ROI muy positivo. 27° API es mediano (aceptable)."
+    respuestaCorrecta:"b",
+    explicacion:"Ingreso neto = 45M × (65-22) = USD 1.935M vs inversión USD 380M. ROI muy positivo. 27° API es mediano (aceptable)."
   },
 
+  // [A] Pregunta 22
   22: { id:22, fase:5,
-    enunciado: `ESCENARIO: El "Campo Jaguar" produce crudo extrapesado de 8° API con altísima viscosidad. El crudo casi no fluye a temperatura ambiente. El yacimiento es somero (800 m). ¿Cuál tecnología es la más adecuada?`,
-    tipo: "opcion_multiple",
+    enunciado: `ESCENARIO: "Campo Jaguar" produce crudo extrapesado de 8° API con altísima viscosidad. El crudo casi no fluye a temperatura ambiente. Yacimiento somero (800 m). ¿Tecnología más adecuada?`,
+    tipo:"opcion_multiple",
     opciones: [
       { id:"a", texto:"Inyección de agua fría (waterflood convencional)" },
       { id:"b", texto:"Inyección de vapor o SAGD para calentar el crudo y reducir su viscosidad" },
       { id:"c", texto:"Inyección de CO₂ miscible a alta presión" },
-      { id:"d", texto:"Bombeo mecánico convencional sin tratamiento térmico" }
+      { id:"d", texto:"Bombeo mecánico convencional sin tratamiento" }
     ],
-    respuestaCorrecta: "b",
-    explicacion: "Para crudos extrapesados (8° API), los métodos térmicos (vapor/SAGD) son esenciales para reducir la viscosidad y permitir el flujo."
+    respuestaCorrecta:"b",
+    explicacion:"Métodos térmicos (vapor/SAGD) calientan crudos extrapesados, reducen viscosidad y permiten que fluyan."
   },
 
+  // [B] Pregunta 23
   23: { id:23, fase:5,
-    enunciado: `ESCENARIO GEOLÓGICO: El equipo analiza una trampa estratigráfica en el Bloque CPO-17:\n\n• Zona de pago: 8 metros de espesor neto\n• Se extiende lateralmente 3,5 km\n• Profundidad: 4.100 m\n• Permeabilidad: 12 mD (moderada-baja)\n\n¿Qué tipo de perforación maximiza el contacto con el reservorio?`,
-    tipo: "opcion_multiple",
+    enunciado: `ESCENARIO: Se descubre el "Campo Aurora" en los Llanos:\n• Reservas: 12 MMBBL\n• API: 22°\n• WTI: USD 70/bbl\n• Costo producción: USD 55/bbl\n• Inversión: USD 250 millones\n• Margen: USD 15/bbl\n\n¿Conclusión de viabilidad?`,
+    tipo:"opcion_multiple",
     opciones: [
-      { id:"a", texto:"Perforación vertical convencional – Corta el reservorio en solo 8 metros" },
-      { id:"b", texto:"Multipozo vertical desde plataforma central (cluster drilling)" },
-      { id:"c", texto:"Perforación horizontal – Recorre hasta 2.000-3.500 m dentro de los 8 m de espesor productivo" },
-      { id:"d", texto:"Perforación vertical con fracturamiento hidráulico masivo" }
+      { id:"a", texto:"Altamente viable – Con 12 MMBBL se recupera la inversión" },
+      { id:"b", texto:"Riesgoso – Ingreso neto 12M × USD 15 = USD 180M, NO cubre la inversión de USD 250M" },
+      { id:"c", texto:"Viable si se duplica la producción diaria" },
+      { id:"d", texto:"No se puede determinar sin conocer el tipo de roca" }
     ],
-    respuestaCorrecta: "c",
-    explicacion: "La perforación horizontal multiplica el área de contacto 250-400 veces comparado con un pozo vertical en un reservorio delgado pero extenso."
+    respuestaCorrecta:"b",
+    explicacion:"Ingreso neto USD 180M < inversión USD 250M. Proyecto destruye valor. VPN negativo."
   },
 
+  // [B] Pregunta 24
   24: { id:24, fase:5,
-    enunciado: `ESCENARIO ESTRATÉGICO: Colombia genera el 70% de su electricidad de hidroeléctricas. Durante El Niño 2015-2016, embalses bajaron a <30%. Déficit proyectado: 3.500 MW.\n\n¿Cuál proyecto de diversificación es más adecuado?`,
-    tipo: "opcion_multiple",
+    enunciado: `ESCENARIO: "Campo Venado" – 15 años de producción:\n• Recobro primario: 22%\n• Presión actual: 850 PSI (original: 2.400 PSI)\n• Crudo: 35° API, baja viscosidad\n\n¿Método de recuperación más adecuado?`,
+    tipo:"opcion_multiple",
     opciones: [
-      { id:"a", texto:"Construir más represas menores (PCH) en ríos secundarios" },
-      { id:"b", texto:"Parques eólicos en La Guajira (2.000 MW) + granjas solares (1.500 MW) + baterías a gran escala" },
-      { id:"c", texto:"Centrales termoeléctricas a carbón en la costa Caribe" },
-      { id:"d", texto:"Importar electricidad desde Ecuador y Venezuela" }
+      { id:"a", texto:"Inyección de vapor (térmica) – Para crudos pesados" },
+      { id:"b", texto:"Inyección de agua (waterflood) – Restaura presión y desplaza crudo residual" },
+      { id:"c", texto:"Inyección de polímeros – Para crudos muy viscosos" },
+      { id:"d", texto:"SAGD – Para crudos extrapesados en yacimientos someros" }
     ],
-    respuestaCorrecta: "b",
-    explicacion: "Eólica+solar+baterías: el viento sopla más en temporada seca (complementa hidráulica), baterías cubren intermitencia. Las PCH no resuelven dependencia hídrica."
+    respuestaCorrecta:"b",
+    explicacion:"Para crudo liviano (35° API) con presión depleta, el waterflood restaura presión y aumenta recobro de 22% a 35-45%."
   },
 
+  // [A] Pregunta 25
   25: { id:25, fase:5,
-    enunciado: `ESCENARIO AMBIENTAL: Una empresa opera un campo petrolero cerca del Parque Serranía de la Macarena. Se produce un derrame de 500 barriles que alcanza un arroyo tributario del río Guayabero. ¿Cuál es la secuencia CORRECTA de respuesta?`,
-    tipo: "opcion_multiple",
+    enunciado: `ESCENARIO: Un reservorio tiene 8 m de espesor neto, se extiende 3,5 km lateralmente, a 4.100 m de profundidad, con 12 mD de permeabilidad. ¿Qué tipo de perforación maximiza el contacto?`,
+    tipo:"opcion_multiple",
     opciones: [
-      { id:"a", texto:"Reportar a la ANLA → Esperar instrucciones → Iniciar limpieza cuando se apruebe" },
-      { id:"b", texto:"Activar plan de contingencia → Contener el derrame con barreras → Notificar a autoridades → Remediar → Monitorear" },
-      { id:"c", texto:"Quemar el crudo derramado para eliminarlo rápidamente" },
-      { id:"d", texto:"Diluir el crudo con agua del río para que se disperse naturalmente" }
+      { id:"a", texto:"Perforación vertical convencional" },
+      { id:"b", texto:"Multipozo vertical (cluster drilling)" },
+      { id:"c", texto:"Perforación horizontal – Recorre 2.000-3.500 m dentro de los 8 m de espesor" },
+      { id:"d", texto:"Vertical con fracturamiento hidráulico masivo" }
     ],
-    respuestaCorrecta: "b",
-    explicacion: "La secuencia es: activar plan inmediatamente, contener, notificar, remediar y monitorear. Quemar o diluir son ilegales y agravan el daño."
+    respuestaCorrecta:"c",
+    explicacion:"La perforación horizontal multiplica el área de contacto 250-400 veces en un reservorio delgado pero extenso."
   }
 };
 
 // ── Funciones utilitarias ───────────────────────────────────
-
 function obtenerPreguntasFase(faseId, banco) {
   banco = banco || PREGUNTAS;
   const fase = FASES.find(f => f.id === faseId);
   if (!fase) return [];
   return fase.preguntas.map(id => banco[id]);
 }
-
 function calcularPuntaje(preguntaId, respuestaEstudiante, banco) {
   banco = banco || PREGUNTAS;
   const pregunta = banco[preguntaId];
@@ -377,21 +405,15 @@ function calcularPuntaje(preguntaId, respuestaEstudiante, banco) {
   if (!fase) return 0;
   return respuestaEstudiante === pregunta.respuestaCorrecta ? fase.puntosPorPregunta : 0;
 }
-
 function calcularNotaFinal(respuestas, banco) {
   banco = banco || PREGUNTAS;
   let notaTotal = 0;
   const notasPorFase = {};
   FASES.forEach(fase => {
     let notaFase = 0;
-    fase.preguntas.forEach(id => {
-      notaFase += calcularPuntaje(id, respuestas[id], banco);
-    });
+    fase.preguntas.forEach(id => { notaFase += calcularPuntaje(id, respuestas[id], banco); });
     notasPorFase[fase.id] = parseFloat(notaFase.toFixed(4));
     notaTotal += notaFase;
   });
-  return {
-    notaTotal: parseFloat(Math.min(notaTotal, 5.0).toFixed(2)),
-    notasPorFase
-  };
+  return { notaTotal: parseFloat(Math.min(notaTotal, 5.0).toFixed(2)), notasPorFase };
 }
